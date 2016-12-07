@@ -1,0 +1,27 @@
+------- 两种删除方式，git删除和手动删除
+$ git rm '1.txt'
+$ git add *
+$ git commit -m 'd1'
+$ git push r -head:master
+
+手动删的,提交需要加 -a
+$ git add *
+$ git commit -a -m 'd1'
+$ git push r -head:master
+
+没有删除的，提交到远程使用
+$ git push r
+即可
+
+--------
+  使用 $ git push r -head:master  
+  是因为 
+$ git push r
+的时候报错：
+fatal: You are not currently on a branch.
+To push the history leading to the current (detached HEAD)
+state now, use
+
+    git push r HEAD:<name-of-remote-branch>
+
+--------

@@ -1,0 +1,43 @@
+安装git后，本地建个文件夹，git cd 到此处
+初始化
+$git init
+
+$ ssh-keygen -t rsa -C "mkxf@163.com"
+ 
+	 下边出来的目录输入和密码都不填，直接回车
+	a 目录输入后g:/x，会在g盘下生成x开头的秘钥和公钥，
+	  但不能用，无论是否放在C:\Users\mk\.ssh 下
+	b 密码填写后，每次push都会要求输入密码，没必要
+
+	默认会在C:\Users\mk\.ssh下生成密钥和公钥  
+	(
+	问老师，钥匙的钥读yao，公钥的钥为什么读yue呢？
+	答：
+	yao——口读
+	yue——书读
+	公钥，属于“书面语词”，当然读yue。
+	在现代汉语里，“钥”读yào的，只出现在【钥匙】这个词里，“钥”居词首。其他都读yuè，且都出现在词尾
+	)
+	
+	linux 新建或者编辑个文件
+	vi filename
+	编辑后 按esc 然后冒号 ，输入wq 保存退出
+
+id_rsa.pub  的内容，放在github的sshkey里边 ，设置里边
+
+$ git add *  
+$ git commit -m 'first commit'
+本地更新后，关联远程
+
+查看远程关联
+$ git remote -v 
+
+在github上新建个仓库，会出来如何关联，使用如下命令：
+$ git remote add r git@github.com:mkxf/x.git
+$ git push -u r master
+r 为远程名,master为分支，本地和远程的分支关联到一起
+出来警告yes/no ，输入yes 回车，然后push上去。
+
+重命名 r 改为 x 和删除
+$ git remote rename r x
+$ git remote rm x
