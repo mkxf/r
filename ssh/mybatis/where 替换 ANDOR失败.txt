@@ -1,0 +1,2 @@
+where 替换 ANDOR失败，检查下是否有空格
+AND OR ，遇到特殊 and 换行再加sql 会替换失败

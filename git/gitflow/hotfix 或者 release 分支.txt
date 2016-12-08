@@ -1,0 +1,18 @@
+如果是 hotfix 或者 release 分支甚至会自动帮你合并到 develop、master 两个分支。
+
+比如我们当前处于 master 分支，如果想要开发一个新的功能，第一步切换到 develop 分支，第二步新建一个以 feature 开头的分支名，有了 Git Flow 直接如下操作完成了：
+git flow feature start A
+这个分支完成之后，需要合并到 develop 分支，然而直接进行如下操作就行：
+git flow feature finish A
+
+
+
+一般开发来说，大部分情况下都会拥有两个分支 master 和 develop，他们的职责分别是：
+  ● master：永远处在即将发布(production-ready)状态
+  ● develop：最新的开发状态
+
+
+ Git Flow 除了以上 master 和 develop 两个主要分支以外，还提出了以下三个辅助分支：
+  ● feature: 开发新功能的分支, 基于 develop, 完成后 merge 回 develop
+  ● release: 准备要发布版本的分支, 用来修复 bug，基于 develop，完成后 merge 回 develop 和 master
+  ● hotfix: 修复 master 上的问题, 等不及 release 版本就必须马上上线. 基于 master, 完成后 merge 回 master 和 develop

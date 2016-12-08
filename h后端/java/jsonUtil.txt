@@ -1,0 +1,65 @@
+package com.util;
+
+import java.util.*;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
+public class JsonUtil {
+
+	/**
+	 * 所有list 使用这种
+	 * 
+	 * @param list
+	 * @return
+	 */
+	public static String getJsonFromList(List<Map<String, Object>> list) {
+
+		if (list == null || list.isEmpty())
+			return null;
+
+		String jay = JSONArray.fromObject(list).toString();
+
+		return JSONArray.fromObject(jay).toString();
+	}
+
+	public static String getJsonFromObject(Object obj) {
+		if (obj == null)
+			return null;
+
+		return JSONObject.fromObject(obj).toString();
+
+	}
+
+	public static String getJsonFromMap(Map<String, Object> map) {
+		if (map == null || map.isEmpty())
+			return null;
+
+		return JSONObject.fromObject(map).toString();
+	}
+
+	/**
+	 * 
+	 * @param jsonStr {}
+	 * @return (Map<String, Object>) JSONObject.toBean(JSONObject, Map.class);
+	 */
+	public static Map<String, Object> getMapFromJson(String jsonStr) {
+		JSONObject jsonObj = JSONObject.fromObject(jsonStr);
+
+		return (Map<String, Object>) JSONObject.toBean(jsonObj, Map.class);
+
+	}
+
+	/**
+	 *
+	 * @param jsonArr  [{}]
+	 * @return (List<Map<String, Object>>) JSONArray.toCollection(JSONArray, Map.class);
+	 */
+	public static List<Map<String, Object>> getListMapFromJson(String jsonArr) {
+		JSONArray jsonObj = JSONArray.fromObject(jsonArr);
+	
+		return (List<Map<String, Object>>) JSONArray.toCollection(jsonObj, Map.class);
+
+	}
+
+}

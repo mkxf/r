@@ -1,0 +1,8 @@
+		    var timerY = setInterval(function(){
+        		    	if ($ycn >= y) {
+        		    		$Jycn.html(y);
+        		    	} else{
+        		    		clearInterval(timerY);   // 结束就清理，要不会一直执行
+        		    	}
+        		    	y++;
+        		    }, 100);  //  100 毫秒
