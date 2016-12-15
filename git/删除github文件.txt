@@ -1,3 +1,7 @@
+删除后  add * 与 push 不变， 提交的时候需要加 -a
+git commit -a -m 'sm', 即可
+
+下边是以前总结的，上边是新的
 ------- 两种删除方式，git删除和手动删除
 $ git rm '1.txt'
 $ git add *
