@@ -1,0 +1,10 @@
+https://www.tutorialspoint.com/spring/spring_bean_definition.htm
+
+The bean definition contains the information called configuration metadata 
+which is needed for the container to know the followings:
+
+	How to create a bean
+
+	Bean's lifecycle details
+
+	Bean's dependencies

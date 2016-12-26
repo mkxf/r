@@ -1,0 +1,2 @@
+1. jdk  ,设置PATH和JAVA_HOME环境变量来引用包含java和javac的目录，通常分别是java_install_dir / bin和java_install_dir。
+ex:  path -> jdk/bin;jre/bin 
