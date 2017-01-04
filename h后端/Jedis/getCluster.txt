@@ -1,0 +1,29 @@
+	public static JedisCluster reloadJedisCluster() throws Exception {
+		System.out.println("初始化实体");
+		
+		JedisCluster cluster = null;
+		String redisAddrCfg = PropertiesUtil.getString(SYSTEM_PROP_CONFIG.REDIS_ADDR_CFG);
+		if (StringUtil.isEmpty(redisAddrCfg) || redisAddrCfg.split(SYSTEM_PROP_CONFIG.REDIS_CFG_SPLIT).length == 0) {
+			throw new Exception("System.properties中REDIS_ADDR_CFG属性为空");
+		}
+		String[] addrs = redisAddrCfg.split(SYSTEM_PROP_CONFIG.REDIS_CFG_SPLIT);
+		for (String addr : addrs) {
+			String[] ipAndPort = addr.split(":");
+			if (ipAndPort == null || ipAndPort.length != 2 || !StringUtil.isNum(ipAndPort[1])) {
+				throw new Exception("System.properties中REDIS_ADDR_CFG属性配置错误");
+			}
+			jedisClusterNodes.add(new HostAndPort(ipAndPort[0], Integer.parseInt(ipAndPort[1])));
+		}
+		// redis.clients.jedis.JedisCluster.JedisCluster(Set<HostAndPort> nodes, int timeout, int maxRedirections)
+		cluster = new JedisCluster(jedisClusterNodes, 2000 , 6);
+		return cluster;
+	}
+
+	public static JedisCluster getCluster() throws Exception {
+		if (jedisCluster == null) {
+			synchronized (JedisUtil.class) {
+				jedisCluster = reloadJedisCluster();
+			}
+		}
+		return jedisCluster;
+	}

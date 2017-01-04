@@ -1,0 +1,31 @@
+   
+     private static Map<String, DefaultMQProducer> producerMap = new HashMap<String, DefaultMQProducer>();
+
+    /**
+     * 获取生产者
+     * @param topic 主题
+     * @return 生产者
+     */
+    private DefaultMQProducer getProducer (String topic) throws Exception {
+        if (producerMap.containsKey(topic)) {
+            return producerMap.get(topic);
+        }
+        DefaultMQProducer producer = new DefaultMQProducer(topic+"_PROD_GROUP");
+        producer.setNamesrvAddr(PropertiesUtil.getString(SYS_CONFIG.REMOTE_MQ_IP_PORT));
+        producer.setInstanceName(topic);
+        producer.start();
+        producerMap.put(topic, producer);
+        return producer;
+    }
+
+    public boolean sendMsg2MQ(String topic, String key, InputObject inputObject) throws Exception {
+        if (StringUtil.isEmpty(topic) || inputObject == null) {
+            throw new Exception("放入队列时,入参为空!");
+        }
+        DefaultMQProducer producer = getProducer(topic);
+        Message msg = new Message(topic,null,key,JsonUtil.inputObject2Json(inputObject).getBytes("utf-8"));
+        SendResult sendResult = producer.send(msg);
+        logger.info("sendMsg2MQ参数", "topic="+topic+"\n  key="+key+" \n inputObject="+inputObject);
+        logger.info("SendStatus", sendResult.getSendStatus().toString());
+        return SendStatus.SEND_OK.equals(sendResult.getSendStatus());
+    }
