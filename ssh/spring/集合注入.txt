@@ -1,0 +1,8 @@
+list.set.map.props 4中
+	null（必须为<null/>） 适用于 property  和  map的value
+
+ 空 和 “”,
+ map  都不行
+ set.list.props  都可以
+
+附：InjectingCollectionBeanRef.xml

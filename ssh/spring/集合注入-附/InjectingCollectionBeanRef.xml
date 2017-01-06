@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<bean id="address1" class="com.mk.InjectingCollection.Address">
+		<property name="add" value=""></property>
+	</bean>
+	<bean id="address2" class="com.mk.InjectingCollection.Address">
+		<property name="add" ><null/></property>
+	</bean>
+
+	<!-- Bean Definition to handle references and values -->
+	<bean id="javaCollection" class="com.mk.InjectingCollection.JavaCollection">
+
+		<!-- Passing bean reference for java.util.List -->
+		<property name="addressList">
+			<list>
+				<ref bean="address1" />
+				<ref bean="address2" />
+				<value>Pakistan</value>
+				<value></value>
+				<value>""</value>
+			</list>
+		</property>
+
+		<!-- Passing bean reference for java.util.Set -->
+		<property name="addressSet">
+			<set>
+				<ref bean="address1" />
+				<ref bean="address2" />
+				<value>Pakistan</value>
+				<value></value>
+				<value>""</value>
+			</set>
+		</property>
+
+		<!-- Passing bean reference for java.util.Map -->
+		<property name="addressMap">
+			<map>
+				<entry key="one" value="INDIA" />
+				<entry key="two" value-ref="address1" />
+				<entry key="three" value-ref="address2" />
+				<entry key="four" ><null/></entry>
+			</map>
+		</property>
+		<!--  不允许设置null -->
+		<property name="addressProp">
+			<props>
+				<prop key="one">Xone</prop>
+				<prop key="two"></prop>
+				<prop key="t">""</prop>
+			</props>
+		</property>
+	</bean>
+
+</beans>
