@@ -1,4 +1,4 @@
-1  eclipse 下maven  pom.xml 引用 jar 包后，项目右键，run as -> maven install  下载相关jar包
+1  eclipse 下maven  pom.xml 引用 jar 包后，项目右键，update就可以下载 (NO run as -> maven install  下载相关jar包）
 2  maven  clean 会把 target 目录删除，只留下src 源目录， 1 会再生成
 
 maven 也会下载相关jar包
