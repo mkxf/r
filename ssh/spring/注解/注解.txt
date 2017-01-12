@@ -1,0 +1,11 @@
+1. 从2.5 开始，支持在类、方法、属性声明上添加注解，来配置依赖关系，替代xml配置方式
+2. 注解注入会被xml注入覆盖，如果同时存在（因为注解注入先执行）
+3. 注解默认关闭，如果需要用，需要配置
+	a 声明增加context (因为 b 用到context，所以必须先声明)
+	b 增加 <context:annotation-config/>
+
+	<context:annotation-config/> 表明spring 应该自动装配值给属性、方法、构造函数
+
+4. 注解有： @Required @Autowired  @Qualifier  以及 JSR-250 Annotations
+
+

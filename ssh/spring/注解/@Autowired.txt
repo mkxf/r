@@ -1,0 +1,19 @@
+1. @Autowired 注解 提供更细粒度控制在 where 和 how 完成自动装配方面
+2. 使用在
+	a set方法（和 @Required 一样 【1. bean属性 2. set方法】）
+	b 构造函数
+	c 属性
+	d 普通方法（任意名字和参数[无参或多参]）
+
+3. set方法上使用 @Autowired时，替换xml中的property属性，spring会按照 byType 方式自动装配
+
+4. @Autowired 是按照 byType 方式自动装配的，
+	与名字无关(无论 配置文件中的name【通常不要】，还是bean 和set ，都没关系)
+	
+  <bean id="spellChecker" name="spellChecker"  class="" />
+     private SpellChecker spellCheckerX;
+
+   @Autowired
+   public void setspellCheckerX( SpellChecker spellCheckerXx ){
+      this.spellCheckerX = spellCheckerXx;
+   }

@@ -1,8 +1,19 @@
 list.set.map.props 4中
-	null（必须为<null/>） 适用于 property  和  map的value
+	null（必须为<null/>） 适用于 property(普通属性)  和  map的value
+	list, set  可以不写，（<value></value>） 但和null是不一样的，输出时不写是不显示，<null/>显示为null
 
- 空 和 “”,
- map  都不行
- set.list.props  都可以
+
+ map  空不行 ，entry 外边 除了null 不能写值
+	<entry key="four" ><null/></entry>
+	<entry key="" value=""></entry>
+
+ 空 和 “”, set.list.props  都可以
+		<value></value>
 
 附：InjectingCollectionBeanRef.xml
+
+
+5List Elements :[Address [add=], Address [add=null], Pakistan, , ""]   （不写）
+5Set Elements :[Address [add=], Address [add=null], Pakistan, , ""]
+5Map Elements :{one=INDIA, two=Address [add=], three=Address [add=null], four=null, =}  （设置为<null/>）
+Property Elements :{two=, one=Xone, t=""}

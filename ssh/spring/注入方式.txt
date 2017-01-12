@@ -1,0 +1,10 @@
+1. 接口注入
+2. 构造方法注入
+3. set注入
+
+spring中 设置 值 可以 通过 
+	<constructor-arg> and <property>
+ 说明有 2 和 3
+ 
+ 资料介绍说spring 没有使用1，待证明
+ 1 具有侵略性，spring强调没有侵略
