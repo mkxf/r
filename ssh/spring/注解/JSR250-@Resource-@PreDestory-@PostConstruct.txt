@@ -1,0 +1,29 @@
+@PostConstruct 在构造函数执行之后执行，可以用来替换xml，bean里的init-method （初始化方法，与构造函数无关）
+ 输出顺序：
+	1. 构造函数 
+	2. @PostConstruct 标注的方法
+	3. init-method  指定的方法
+
+@PreDestory 在销毁方法之前执行， 可以替换xmlbean的destory-method（销毁方法）
+
+ AbstractApplicationContext context = new ClassPathXmlApplicationContext("JSR250.xml");
+   context.registerShutdownHook(); // 关闭  // 必须有此调用，才会执行销毁方法
+
+  显示调用销毁方法或者容器的关闭（如上），才会触发，
+
+  -------------
+Spring提供了两种方式在Bean全部属性设置成功后执行特定的行为：
+	1.在Spring配置文件中使用init-method属性 在Bean全部依赖关系设置结束后自动执行
+	2.让Bean实现InitializingBean接口：
+		该接口提供了一个afterPropertiesSet() throwsException方法，在Bean里面实现它
+1 和 2 同时存在， 先执行2 ，再执行1， 2 是初始化bean的时候执行的，
+	根据方法名可以得知，设置完bean的属性后，执行，完成bean的初始化，而 1  是在初始化后执后触发才调用的方法
+  ---------
+  Bean销毁之前的行为：
+
+    与定制初始化行为相似，Spring也提供了两种方式定制在Bean销毁之前的特定行为：
+
+使用destroy-method属性：指定某个方法在Bean销毁之前被自动执行。使用这种方法，不需要将代码与Spring的接口耦合在一起，代码污染小，推荐使用。
+
+实现DisposableBean接口：该接口提供了一个destroy() throws Exception的方法。在Bean里面实现它，这个方法将在Bean销毁之前被Spring调用。
+--------

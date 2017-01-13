@@ -1,0 +1,21 @@
+       
+       set，list 继承 Collection 接口
+		Collection<E> extends Iterable<E> （end）
+	Map 没有父接口
+
+       set 元素不能重复，list 可以重复 ，map key，value 形式，key不会重复，后边把前边覆盖
+
+       都可以放null，不影响
+	 
+	 ArrayList list = new ArrayList();
+         list.add(null);  // right
+         System.out.println(list);  // [null]
+         
+         Set set  = new HashSet();
+         set.add(null); // right
+         System.out.println(set); // [null]
+        
+        Map map = new HashMap();
+        map.put(null, "x");  // right
+        map.put("a", null); // right
+        System.out.println(map); // {null=x, a=null}

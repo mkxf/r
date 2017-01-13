@@ -1,0 +1,22 @@
+@Autowired （限定的）是按照类型自动装配的，有时一种类型的bean有多个，但只用到一个，
+ 可以配合 @Qualifier注解一起，用于区分
+
+   @Autowired
+   @Qualifier("student1")
+   private Student student;
+
+   <bean id="student1" class="com.tutorialspoint.Student">
+      <property name="name"  value="Zara" />
+      <property name="age"  value="11"/>
+   </bean>
+
+   <bean id="student2" class="com.tutorialspoint.Student">
+     <property name="name"  value="Nuha" />
+      <property name="age"  value="2"/>
+   </bean>
+
+   @Autowired 使用范围
+   	a set方法（和 @Required 一样 【1. bean属性 2. set方法】）
+	b 构造函数
+	c 属性
+	d 普通方法（任意名字和参数[无参或多参]）
