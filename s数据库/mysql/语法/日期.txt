@@ -1,0 +1,3 @@
+WHERE DATE_SUB(CURDATE(),INTERVAL 30 DAY) <= stat_date  -- 当前时间30天 <= stat_date 
+ -- stat_date  date类型， 
+
