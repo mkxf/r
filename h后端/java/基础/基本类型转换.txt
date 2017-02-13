@@ -1,0 +1,10 @@
+ double l = 3.2;
+        long s = 10;
+        System.out.println(s/l); // 3.125
+
+
+---
+
+      long l = 3;
+        long s = 10;
+        System.out.println(s/l); // 3 , long 类型，不用转换

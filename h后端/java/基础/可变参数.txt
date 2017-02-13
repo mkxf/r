@@ -10,3 +10,6 @@
 参数意思： 第一个是方法名，后边是参数的类型
 如 getStr(int a,String b)
  this.getClass().getMethod("getStr",int.class,String.class)
+ -----
+ //反射调用对象的方法，同时传入输入和输出对象
+ mth.invoke(object, inputObject ,outputObject); //  可变参数
