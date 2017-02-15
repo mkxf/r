@@ -1,0 +1,63 @@
+1. <?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="resourcesMapper">
+ // sql ...
+</mapper>
+
+2. DATEDIFF() 函数返回两个日期之间的天数。 不要直接日期比较或者字符串比较
+ SELECT DATEDIFF('2008-12-30','2008-12-29') AS DiffDate  -- 1
+ SELECT DATEDIFF('2008-12-29','2008-12-30') AS DiffDate  -- -1
+
+3. sql 段
+	声明:
+		<sql id="Is_Where_Column"> .. </sql>
+	使用:
+		<include refid="Is_Where_Column" />
+
+4.  trim  判断最后的sql 如果以 suffixOverrides 结尾，则替换成 suffix 的内容，
+    开头对应为 prefix="" prefixOverrides="" 
+
+	<trim suffix="" suffixOverrides="UNION SELECT"> .. </trim>
+
+5.  	<select id="selectRsStateCount" parameterType="java.util.Map"	resultType="int">
+返回为 result 什么，如果不是映射类型，则为type，映射为Map， 这个map 为映射，与java的map没关系
+例如  resultType="java.util.Map" ， 则结果集形式为 List<Map<,>>
+
+6.    #{} 将传入的数据都当成一个字符串，会对自动传入的数据加一个双引号，预处理，
+	类似
+		PreparedStatement ps = conn.prepareStatement(sql);
+		ps.setInt(1,id);
+
+	$将传入的数据直接显示生成在sql中
+
+7.
+
+a.多个结果集插入
+	 1. INSERT INTO VALUES(),(),().. 
+	 2. INSERT INTO  SELECT .. UNION (ALL) SELECT..  UNION (ALL) SELECT..
+b.遍历 collection  <foreach collection="collection" item="item">  #{item}  </foreach>
+	collection 对应 外部集合，例如list，每次取其中一个元素为 item
+ --
+ <trim suffix="" suffixOverrides="UNION ALL">
+	<foreach collection="collection" item="item">
+	..
+	<if test="statTypeCd == 'cmPv'">
+		SUM(IFNULL(DAILY_PTCPT_TMS_CNT, 0)),
+	</if>
+	..
+	WHERE DATE_FORMAT(STAT_DATE,'%Y-%m-%d') = #{stateDate}  //  日期转字符串 再比较
+
+	AND CMPGN_ID = #{item.cmpgnId,jdbcType=VARCHAR}
+	UNION ALL
+	</foreach>
+</trim>
+--
+
+8. 分页
+
+		<if test="start != null and limit != null and start !='' and limit != ''">
+			limit ${start},${limit}
+		</if>
+		<if test="start == null  or limit == null or start == '' or limit ==''">
+			limit 0,10
+		</if>
