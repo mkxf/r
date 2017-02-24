@@ -1,0 +1,45 @@
+1. idea 上边可以查看依赖情况，有列表和图两种
+2. mvn dependency:tree 命令查看，进到这个项目里，也就是pom.xml所在位置，运行，如果有私服jar，可能会失败，处理方式没查
+	有文章说idea上可能有的依赖没有查出来， 使用命令可以查
+3. 查看项目的jar包，build path 里maven jar包的引用情况，依赖jar包也会引进去，可以看下是否有 不应该有的jar，验证处理冲突是否有效
+	或者打war包，再查看 mvn install （eclipse）对于多环境打包，可以使用 mvn package -p <id>  进行选择，
+		在pom中，<profiles><profile>有 <id> 和 <properties> （具体标签名 与 值）,通过这个实现不同环境不同问题，如连接池等
+	还有一种笨方法，多个pom， 如 pom_dev.xml,pom_pud.xml，但会大量重复，不使用
+
+ 排除依赖 ，如  poi-ooxml 会依赖 poi-ooxml-schemas 间接依赖  xmlbeans 2.6 ，但要使用2.3版本，在 ooxml-schemas 1.1 中，
+		所以2个都要排除,使用idea进行查看， build path ->lib  进行验证，是否有2.6， 或者打war包解压查看lib
+ 
+
+ <dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>3.13</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>3.13</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.poi</groupId>
+					<artifactId>poi-ooxml-schemas</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml-schemas</artifactId>
+			<version>3.13</version>
+			<exclusions>
+					<exclusion>
+					<groupId>org.apache.xmlbeans</groupId>
+					<artifactId>xmlbeans</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.poi/ooxml-schemas -->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>ooxml-schemas</artifactId>
+			<version>1.1</version>
+		</dependency>
