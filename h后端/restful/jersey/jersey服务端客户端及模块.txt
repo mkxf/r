@@ -1,4 +1,4 @@
-Jersey2.6以后使用的是jdk7, 2.6还是使用jdk6
+Jersey2.6以后使用的是jdk7 ( 2.6还是使用jdk6 )
 服务器端：
 1. 部署基于Servlet的应用程序在Glassfish上 时，不需要打包，
    只需要声明（提供）对JAX-RS API的依赖，以便能够编译您的应用程序。
@@ -14,7 +14,7 @@ Jersey2.6以后使用的是jdk7, 2.6还是使用jdk6
    如果servlet容器没有集成JAX-RS实现，则需要引入JAX-RS API和Jersey实现
        <dependency>
 	    <groupId>org.glassfish.jersey.containers</groupId>
-	    <!--如果容器的 Servlet 版本地狱 3.0, 使用 "jersey-container-servlet-core"  -->
+	    <!--如果容器的 Servlet 版本低于 3.0, 使用 "jersey-container-servlet-core"，多一个 -core  -->
 	    <artifactId>jersey-container-servlet</artifactId> -->  <artifactId>jersey-container-servlet-cor</artifactId> 
 	    <version>2.25.1</version>
 	</dependency>

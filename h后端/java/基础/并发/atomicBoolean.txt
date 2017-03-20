@@ -1,0 +1,5 @@
+        // 保证原子性
+        AtomicBoolean b = new AtomicBoolean(false);
+        // compareAndSet(e1,e2),如果e1 的值与b相等，则把e2赋值给b并返回b,否则返回原来的值
+        boolean x = b.compareAndSet(true, true);
+        System.out.println(b);
