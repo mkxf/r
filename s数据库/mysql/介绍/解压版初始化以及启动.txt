@@ -1,3 +1,5 @@
+G:\mysql-5.7.14-winx64-zipInstall\bin
+
 mysql-5.7.14-winx64是Windows 64位免配置安装版本
 1、解压到想安装到的文件夹，如E:\mysql-5.7.14-winx64
 

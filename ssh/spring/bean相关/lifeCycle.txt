@@ -1,0 +1,15 @@
+生命周期 重要的是 初始化 和 销毁
+	当一个 bean 被实例化时，它可能需要执行一些初始化使它转换成可用状态。
+	当不再需要，并且从容器中移除时，可能需要做一些清除工作。
+
+ --- Bean 实例化和销毁之间发生的活动不讨论
+
+初始化 和 销毁 2种方式
+1. 配置文件指定  init-method ， destroy-method
+ <bean id="exampleBean"  class="examples.ExampleBean" init-method="init"/>
+2.实现 InitializingBean, DisposableBean 接口，
+	分别对应的方法为
+	  public void afterPropertiesSet() throws Exception {}
+	  public void destroy() throws Exception {}
+	  -- spring 内部根据配置文件装配bean，然后设置属性，然后再调用相关方法
+	  -- 所以是 afterPropertiesSet 而不是init()
