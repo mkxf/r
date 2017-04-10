@@ -1,0 +1,195 @@
+----- 待补充更改，需要具体例子和测试，其他资料
+获取spring 中的bean，都是从  ApplicationContext  getBean(name) 这种方式
+但 ApplicationContext 来源不同，分许多
+1. 直接根据配置文件 new 出来
+
+		ApplicationContext ac = new FileSystemXmlApplicationContext("applicationContext.xml"); 
+			ac.getBean("beanId");
+2. 通过  ContextLoader ，但Spring容器初始化时，不能通过这种方法获取Spring容器 ？
+
+		WebApplicationContext wac = ContextLoader.getCurrentWebApplicationContext();
+			wac.getBean(beanID);
+3. 注入：
+	a 实现接口ApplicationContextAware，需要把实现类注入到spring中！！ getBean 是 static 方法，所以配置的时候，不需要id
+		 -- 也可以获取到此类，此类没什么特殊？ 
+	b 继承自抽象类WebApplicationObjectSupport
+	c 继承自抽象类ApplicationObjectSupport
+	d 通过Spring提供的工具类获取ApplicationContext对象  ？重点查下，以前失败
+		--  适合于采用Spring框架的B/S系统
+
+		ApplicationContext ac1 = WebApplicationContextUtils.getRequiredWebApplicationContext(ServletContext sc); 
+		ApplicationContext ac2 = WebApplicationContextUtils.getWebApplicationContext(ServletContext sc); 
+			ac1.getBean("beanId"); 
+			ac2.getBean("beanId");
+
+
+
+-----------------------
+Spring 中提供一些Aware相关接口，像是
+	BeanFactoryAware、 
+	ApplicationContextAware、
+	ResourceLoaderAware、
+	ServletContextAware
+  等等，
+这些 Aware接口的Bean在被初始之后，可以取得一些相对应的资源
+例如实现BeanFactoryAware的Bean在初始后，Spring容器将会注入BeanFactory的实例，
+而实现ApplicationContextAware的Bean，在Bean被初始后，将会被注入 ApplicationContext的实例等等
+
+
+
+
+
+
+
+
+
+
+
+
+
+----------------------------------------
+public class SpringContextUtil implements ApplicationContextAware {
+
+    private static ApplicationContext applicationContext;     //Spring应用上下文环境
+
+    /**
+     * 实现ApplicationContextAware接口的回调方法，设置上下文环境
+     * @param applicationContext
+     * @throws BeansException
+     */
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        SpringContextUtil.applicationContext = applicationContext;
+    }
+
+    /**
+     * @return ApplicationContext
+     */
+    public static ApplicationContext getApplicationContext() {
+        return applicationContext;
+    }
+
+    /**
+     * 获取对象
+     * @param name
+     * @return Object 一个以所给名字注册的bean的实例
+     * @throws BeansException
+     */
+    public static Object getBean(String name) throws BeansException {
+        return applicationContext.getBean(name);
+    }
+
+    /**
+     * 获取类型为requiredType的对象
+     * 如果bean不能被类型转换，相应的异常将会被抛出（BeanNotOfRequiredTypeException）
+     * @param name       bean注册名
+     * @param requiredType 返回对象类型
+     * @return Object 返回requiredType类型对象
+     * @throws BeansException
+     */
+    public static Object getBean(String name, Class requiredType) throws BeansException {
+        return applicationContext.getBean(name, requiredType);
+    }
+
+    /**
+     * 如果BeanFactory包含一个与所给名称匹配的bean定义，则返回true
+     * @param name
+     * @return boolean
+     */
+    public static boolean containsBean(String name) {
+        return applicationContext.containsBean(name);
+    }
+
+    /**
+     * 判断以给定名字注册的bean定义是一个singleton还是一个prototype。
+     * 如果与给定名字相应的bean定义没有被找到，将会抛出一个异常（NoSuchBeanDefinitionException）
+     * @param name
+     * @return boolean
+     * @throws NoSuchBeanDefinitionException
+     */
+    public static boolean isSingleton(String name) throws NoSuchBeanDefinitionException {
+        return applicationContext.isSingleton(name);
+    }
+
+    /**
+     * @param name
+     * @return Class 注册对象的类型
+     * @throws NoSuchBeanDefinitionException
+     */
+    public static Class getType(String name) throws NoSuchBeanDefinitionException {
+        return applicationContext.getType(name);
+    }
+
+    /**
+     * 如果给定的bean名字在bean定义中有别名，则返回这些别名
+     * @param name
+     * @return
+     * @throws NoSuchBeanDefinitionException
+     */
+    public static String[] getAliases(String name) throws NoSuchBeanDefinitionException {
+        return applicationContext.getAliases(name);
+    }
+}
+
+----------------------
+
+应该是web的
+
+1.先写个工具类,实现ApplicationContextAware接口，然后他会把ApplicationContext对象传给你，在setApplicationContext方法里已经把ApplicationContext传给你了，然后去完成初始
+2.applicationContext也需要注入否则报NullPointException
+
+/**
+ * 从Spring容器中取得对象
+ *
+ */
+public class SpringContextUtil implements ApplicationContextAware,
+        ServletContextAware {
+
+    private static ApplicationContext applicationContext; // Spring上下文对象
+
+    private static ServletContext servletContext;// 注入 系统上下文对象
+
+    /**
+     * 实现ApplicationContextAware接口的回调方法，设置上下文环境
+     * 
+     * @param applicationContext
+     * @throws BeansException
+     */
+    public void setApplicationContext(ApplicationContext applicationContext) {
+        SpringContextUtil.applicationContext = applicationContext;
+    }
+
+    /**
+     * @return ApplicationContext
+     */
+    public static ApplicationContext getApplicationContext() {
+        return applicationContext;
+    }
+
+    /**
+     * 获取对象
+     * 
+     * @param name
+     * @return Object 一个以所给名字注册的bean的实例
+     * @throws BeansException
+     */
+    public static Object getBean(String name) throws BeansException {
+        return applicationContext.getBean(name);
+    }
+
+    /**
+     * 功能 : 实现 ServletContextAware接口,由Spring自动注入 系统上下文对象
+     * 
+     **/
+    public void setServletContext(ServletContext servletContext) {
+        SpringContextUtil.servletContext = servletContext;
+    }
+
+    /**
+     * @return ServletContext
+     */
+    public static ServletContext getServletContext() {
+        return servletContext;
+    }
+}
+
+-------------------------

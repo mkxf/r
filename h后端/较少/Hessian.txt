@@ -1,0 +1,16 @@
+数学上是个矩阵 海森矩阵
+java：
+---
+Hessian类似Web Service，是一种高效简洁的远程调用框架。通过Servlet提供远程服务
+	采用的是二进制RPC协议（Binary）
+	Hessian通常通过Web应用来提供服务，因此非常类似于WebService。只是它不使用SOAP协议
+
+Hessian的初衷就是支持动态类型，格式紧凑，跨语言Hessian是使用自己的序列化机制实现的编组和反编组，
+其支持的数据类型是有限制的，不支持复杂的对象，可以穿透防火墙
+
+-------
+
+hessian是一种跨语言的高效二进制序列化方式。但这里实际不是原生的hessian2序列化，
+	而是阿里修改过的hessian lite，它是dubbo RPC默认启用的序列化方式
+	------------
+	https://dangdangdotcom.github.io/dubbox/serialization.html  序列化漫谈 s->hessian lite
