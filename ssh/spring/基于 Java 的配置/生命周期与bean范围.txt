@@ -1,0 +1,39 @@
+@Bean 注解 
+1. 支持指定 初始化和销毁的方法 （是个回调方法）
+  还是通过 initMethod  和 destroyMethod 方法指定
+
+2. 指定 Bean 的范围
+	默认范围是单实例，但是你可以重写带有 @Scope 注解的该方法
+-------
+1. 生命周期
+
+public class Foo {
+   public void init() {
+      // initialization logic
+   }
+   public void cleanup() {
+      // destruction logic
+   }
+}
+
+@Configuration
+public class AppConfig {
+   @Bean(initMethod = "init", destroyMethod = "cleanup" )
+   public Foo foo() {
+      return new Foo();
+   }
+}
+----
+
+2. 指定 Bean 的范围
+-----
+
+@Configuration
+public class AppConfig {
+   @Bean
+   @Scope("prototype")
+   public Foo foo() {
+      return new Foo();
+   }
+}
+------

@@ -1,17 +1,21 @@
-@Required 应用于bean属性的set方法，要求受影响的bean必须在xml配置文件要，
+@Required  说明此属性不能为空
+
+	应用于bean属性的set方法，要求受影响的bean必须在xml配置文件，
 	否则会抛出bean初始化异常（BeanInitializationException exception）
 
 1. bean　属性
 2. set 方法 (别的地方都不行，已试)
 3. xml配置文件有被注解的bean
 
+import org.springframework.beans.factory.annotation.Required;
+public class Student{
  private Integer age;   
-
+ ..
  @Required   
    public void setAge(Integer age) {
       this.age = age;
    }
-
+}
    <?xml version="1.0" encoding="UTF-8"?>
 
 <beans xmlns="http://www.springframework.org/schema/beans"
@@ -27,7 +31,8 @@
    <!-- Definition for student bean -->
    <bean id="student" class="com.tutorialspoint.Student">
       <property name="name"  value="Zara" />
-     
+         <!-- try without passing age and check the result -->
+      <property name="age"  value="11"/>   
    </bean>
 
 </beans>

@@ -1,0 +1,15 @@
+   // 日期比较应该同格式，不同的比较不准确，即使第二三种方法也是
+        // dt1 与 dt3 比较相等
+        String pattern = "yyyy-MM-dd HH:mm:ss";
+        DateFormat df = new SimpleDateFormat(pattern);
+        Date dt1 = df.parse("1990-09-18 00:00:00");
+        Date dt2 = df.parse("1990-09-18 12:00:11");
+
+//        String pattern2 = "yyyy-MM-dd";
+//        DateFormat df2 = new SimpleDateFormat(pattern2);
+//        Date dt3 = df2.parse("1990-09-18 12:00:11");
+        System.out.println(Long.signum((dt1.getTime() - dt1.getTime()))); // 小于 -1 大于 1 等于 0
+
+        System.out.println(!dt1.after(dt1)); // 不大于 true ， 否则 false
+
+        System.out.println(dt1.compareTo(dt1)); // 小于 -1 大于 1 等于 0

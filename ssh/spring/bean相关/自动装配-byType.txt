@@ -1,0 +1,41 @@
+由属性类型指定自动装配
+
+beans 的 autowire 属性设置为 byType，
+根据  type 与配置文件中 beans 名称中的一个进行匹配，
+找到一个，匹配，没有或者多个，抛出异常
+
+例如，在配置文件中， 1. 如果一个 bean 定义设置为自动装配 byType，
+2. 并且它包含 SpellChecker 类型的 spellChecker 属性，
+3. 那么 Spring 就会查找定义名为 SpellChecker 的 bean，并且用它来设置这个属性。
+仍然可以使用 <property> 标签连接其余属性
+
+----
+
+<beans ..>
+
+   <!-- Definition for textEditor bean -->
+   <bean id="textEditor" class="com.tutorialspoint.TextEditor">
+      <property name="spellChecker" ref="spellChecker" />
+      <property name="name" value="Generic Text Editor" />
+   </bean>
+
+   <!-- Definition for spellChecker bean -->
+   <bean id="spellChecker" class="com.tutorialspoint.SpellChecker">
+   </bean>
+
+</beans>
+
+->  1.  autowire="byType" 
+    2. 没有  <property name="spellChecker" ref="spellChecker" />
+
+<beans ..>
+   
+   <bean id="textEditor" class="com.tutorialspoint.TextEditor" 
+      autowire="byType">
+      <property name="name" value="Generic Text Editor" />
+   </bean>
+
+   <bean id="SpellChecker" class="com.tutorialspoint.SpellChecker">
+   </bean>
+
+</beans>

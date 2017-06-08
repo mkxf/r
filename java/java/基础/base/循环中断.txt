@@ -1,0 +1,30 @@
+3个循环 for  while do..while 以及组合
+
+3个中断  continue, break,return
+
+continue 只是结束此次循环，然后开始下一次循环
+break    结束这个循环体，外部的循环体依然可以执行
+return   结束整个循环
+
+ex:
+for(int j  = 0; j< 5;j++){
+    	
+    	if(j==0){
+		break;   // 从一开始就中断了for循环，不会继续执行
+	}
+	
+	int i =5;
+        while(i>0){
+        	i--;
+		if(i==0){
+        		break;  // i== 0 时， 中断while 循环，for循环继续
+        	}
+        	if(i==1){
+        		return;  // i == 1 时，while 和 for 都会中断
+        	}
+        	if(i==2){
+        		continue; // 只是中断 i == 2 的循环， while 还会继续
+        	}
+        	System.out.println(i);
+        }
+}

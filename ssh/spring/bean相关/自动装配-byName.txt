@@ -1,0 +1,36 @@
+在 XML 配置文件中 beans 的 auto-wire 属性设置为 byName。
+然后，将 属性 与 名称相同 的 bean 进行匹配。
+如果找到匹配项，它将注入这些 beans，否则，它将抛出异常
+----  要求唯一
+ 自动装配，就是不用再写
+
+如下：
+
+正常情况下的配置文件 Beans.xml 文件
+
+<beans ..>
+
+   <bean id="textEditor" class="com.tutorialspoint.TextEditor">
+       <property name="spellChecker" ref="spellChecker" />
+       <property name="name" value="Generic Text Editor" />
+   </bean>
+
+   <bean id="spellChecker" class="com.tutorialspoint.SpellChecker">
+   </bean>
+
+</beans>
+
+
+可改为 ->  1. bean上多了一个 autowire="byName"
+	   2. 少了  spellChecker 属性的设置
+<beans ..>
+   
+   <bean id="textEditor" class="com.tutorialspoint.TextEditor" 
+      autowire="byName">
+      <property name="name" value="Generic Text Editor" />
+   </bean>
+
+    <bean id="spellChecker" class="com.tutorialspoint.SpellChecker">
+   </bean>
+
+</beans>

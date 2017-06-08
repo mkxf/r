@@ -1,0 +1,10 @@
+Set<char[]> set = new HashSet<>();
+此种set 判断不了唯一，也就是 里边会存在多个 相同的 char[]
+
+使用此方法转换为String，再放到set中
+String str = Arrays.toString(char[]);
+
+如果是对象
+set中判断唯一，通过equals方法，重写需要重写 hashcode().
+
+里边放的数组，暂时没发现有多好的解决方法

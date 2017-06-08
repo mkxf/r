@@ -1,0 +1,51 @@
+a x -> new map对象，
+
+
+1.png
+
+
+调用后
+b x -> 另一个map对象，
+ 在输出a的x，x 还是a处刚初始化的对象的引用，没有引用到b的对象， 因为b 处的 x 已经变成 另一个map对象的引用，不再是 a 处的x 的引用。
+
+Java的参数传递为值传递。也就是说，当我们传递一个参数时，方法将获得该参数的一个拷贝。
+实际上，我们传递的参数，一个是基本类型的变量，另一个为对象的引用。
+基本类型变量的值传递，意味着变量本身被复制，并传递给Java方法。Java方法对变量的修改不会影响到原变量。
+引用的值传递，意味着对象的地址被复制，并传递给Java方法。Java方法根据该引用的访问将会影响对象。
+http://www.cnblogs.com/vamei/archive/2013/04/01/2992484.html
+
+public class A {
+   final Log log =  LogFactory.getLog(this.getClass());
+    
+    public static void main(String[] args)  { 
+A a = new A();
+        Map x = new HashMap();
+        a.setMap(x);
+        System.out.println(x);  // 输出为空
+        // 空  下边 map 重新赋值，变成 setMap 内部变量的引用，这个地方的X，没有引用到里边的值
+        
+    }
+    
+    
+    public void setMap(Map map){
+        Map m = new HashMap();
+        m.put("a", 1);
+        map = m;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,4 @@
+1. String to int
+	Integer.parseInt(String) >  Integer.valueOf(String)  -- new  Integer  return Integer.valueOf(parseInt(s, 10)); int 范围
+2. int to String 
+	Integer.toString(int) or  String.valueOf(i)[内部调用前者]   > ? |  '' + int  -- new String

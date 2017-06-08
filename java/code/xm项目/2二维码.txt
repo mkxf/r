@@ -1,0 +1,124 @@
+浏览器地址栏输入
+http://localhost:8090/mamp/front/sh/common!getQrCodeNoDes?uid=c001&content=https://www.baidu.com?a=1&urlParams={"b":"1"}&urlHasParam=1
+
+http://localhost:8090/mamp/front/sh/common!getQrCodeNoDes?uid=c001&content=https://www.baidu.com?a=1&urlParams={%22b%22:%221%22}&urlHasParam=1 
+
+json在地址栏输入的时候，要不用双引号，要不用%22代替单引号
+
+action中方法：
+
+  /**
+     * 生成二维码公共方法
+     * @throws ReaderException
+     * content http://www.baidu.com
+     * urlParams:{"a":1,"b":2}
+     */
+    public void getQrCodeNoDes(){
+        try {
+            getResponse().setContentType("image/jpeg");// 设置相应类型,告诉浏览器输出的内容为图片
+            getResponse().setHeader("Pragma", "No-cache");// 设置响应头信息，告诉浏览器不要缓存此内容
+            getResponse().setHeader("Cache-Control", "no-cache");// 访问此页面不会在Internet临时文章夹留下页面备份。
+            getResponse().setDateHeader("Expire", 0);// response 立即过期
+            InputObject inputObject = super.getInputObject();
+            String url = inputObject.getParams().get("content");    //url
+            String urlParams = inputObject.getParams().get("urlParams");    //url参数
+            String urlHasParam = inputObject.getParams().get("urlHasParam");    //url包含有参数 1，是 0 或者空否
+            if(StringUtil.isNotEmpty(urlParams)){
+                Map<String, Object> paramsMap = JsonUtil.convertJson2Object(urlParams, HashMap.class);
+                int index = 0;
+                for (Map.Entry<String, Object> entry : paramsMap.entrySet()) {
+                    String name = entry.getKey();
+                    Object value = entry.getValue();
+                    if(index == 0  && !"1".equals(urlHasParam)){
+                       url+="?"+name+"="+value.toString();
+                    }else{
+                        url+="&"+name+"="+value.toString();
+                    }
+                    index++;
+                }
+            }
+            logger.info("二维码url", url);
+            BufferedImage image = ZXingUtilIo.encodeQRCodeImage(url, null, 200, 200, null);
+            ImageIO.write(image, "JPEG", getResponse().getOutputStream()); // 将内存中的图片通过流动形式输出到客户端,image是你的数据流,BufferedImage
+
+        } catch (IOException e) {
+            logger.error("请求发生错误：", e.toString());
+
+        }
+    }
+
+
+
+    --------  ZXingUtilIo -------
+
+     /**
+     * 生成二维码
+     * @param content   二维码内容
+     * @param charset   编码二维码内容时采用的字符集(传null时默认采用UTF-8编码)
+     * @param imagePath 二维码图片存放路径(含文件名)
+     * @param width     生成的二维码图片宽度
+     * @param height    生成的二维码图片高度
+     * @param logoPath  logo头像存放路径(含文件名,若不加logo则传null即可)
+     * @return 生成二维码结果(true or false)
+     */
+    public static BufferedImage encodeQRCodeImage(String content, String charset, int width, int height,
+        String logoPath) {
+        Map<EncodeHintType, Object> hints = new HashMap<EncodeHintType, Object>();
+        BufferedImage image = null;
+        // 指定编码格式
+        // hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
+        // 指定纠错级别(L--7%,M--15%,Q--25%,H--30%)
+        hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
+        hints.put(EncodeHintType.MARGIN, 1);// margin 边框设置
+        // 编码内容,编码类型(这里指定为二维码),生成图片宽度,生成图片高度,设置参数
+        BitMatrix bitMatrix = null;
+        try {
+            bitMatrix = new MultiFormatWriter().encode(content, BarcodeFormat.QR_CODE, width, height, hints);
+        } catch (Exception e) {
+            System.out.println("编码待生成二维码图片的文本时发生异常,堆栈轨迹如下");
+            e.printStackTrace();
+            return null;
+        }
+        // 生成的二维码图片默认背景为白色,前景为黑色,但是在加入logo图像后会导致logo也变为黑白色,至于是什么原因还没有仔细去读它的源码
+        // 所以这里对其第一个参数黑色将ZXing默认的前景色0xFF000000稍微改了一下0xFF000001,最终效果也是白色背景黑色前景的二维码,且logo颜色保持原有不变
+        MatrixToImageConfig config = new MatrixToImageConfig(0xFF000001, 0xFFFFFFFF);
+        // 这里要显式指定MatrixToImageConfig,否则还会按照默认处理将logo图像也变为黑白色(如果打算加logo的话,反之则不须传MatrixToImageConfig参数)
+        image = MatrixToImageWriter.toBufferedImage(bitMatrix, config);
+        // 此时二维码图片已经生成了,只不过没有logo头像,所以接下来根据传入的logoPath参数来决定是否加logo头像
+        if (null == logoPath) {
+            return image;
+        } else {
+            // 如果此时最终生成的二维码不是我们想要的,那么可以扩展MatrixToImageConfig类(反正ZXing提供了源码)
+            // 扩展时可以重写其writeToFile方法,令其返回toBufferedImage()方法所生成的BufferedImage对象(尽管这种做法未必能解决为题,故需根据实际情景测试)
+            // 然后替换这里overlapImage()里面的第一行BufferedImage image = ImageIO.read(new File(imagePath));
+            // 即private static void overlapImage(BufferedImage image, String imagePath, String logoPath)
+            try {
+                // 这里不需要判断logoPath是否指向了一个具体的文件,因为这种情景下overlapImage会抛IO异常
+                image = overlapImage(image, logoPath);
+            } catch (IOException e) {
+                System.out.println("为二维码图片[ ]添加logo头像[" + logoPath + "]时遇到异常,堆栈轨迹如下");
+                e.printStackTrace();
+            }
+            return image;
+        }
+    }
+
+    -------
+
+     /**
+     * 为二维码图片增加logo头像
+     * @see 其原理类似于图片加水印
+     * @param imagePath 二维码图片存放路径(含文件名)
+     * @param logoPath  logo头像存放路径(含文件名)
+     */
+    public static BufferedImage overlapImage(BufferedImage image, String logoPath) throws IOException {
+        int logoWidth = image.getWidth() / 5; // 设置logo图片宽度为二维码图片的五分之一
+        int logoHeight = image.getHeight() / 5; // 设置logo图片高度为二维码图片的五分之一
+        int logoX = (image.getWidth() - logoWidth) / 2; // 设置logo图片的位置,这里令其居中
+        int logoY = (image.getHeight() - logoHeight) / 2; // 设置logo图片的位置,这里令其居中
+        Graphics2D graphics = image.createGraphics();
+        graphics.drawImage(ImageIO.read(new File(logoPath)), logoX, logoY, logoWidth, logoHeight, null);
+        graphics.dispose();
+        // ImageIO.write(image, imagePath.substring(imagePath.lastIndexOf(".") + 1), new File(imagePath));
+        return image;
+    }

@@ -1,0 +1,15 @@
+可变参数 传 具体参数 或者数组类型的都可以
+
+  mth = object.getClass().getMethod(inputObject.getMethod(), InputObject.class, OutputObject.class);
+  mth = object.getClass().getMethod(inputObject.getMethod(), new Class[]{InputObject.class, OutputObject.class});
+     
+   调用的方法是同一个
+   public Method getMethod(String name, Class<?>... parameterTypes)
+        throws NoSuchMethodException, SecurityException {...}
+
+参数意思： 第一个是方法名，后边是参数的类型
+如 getStr(int a,String b)
+ this.getClass().getMethod("getStr",int.class,String.class)
+ -----
+ //反射调用对象的方法，同时传入输入和输出对象
+ mth.invoke(object, inputObject ,outputObject); //  可变参数

@@ -1,0 +1,12 @@
+ 其实就是个匿名函数，这个函数就用来做一件事情，叫什么名字无所谓。
+
+map( lambda x: x*x, [y for y in range(10)] )
+
+这个写法要好过
+def sq(x):
+    return x * x
+
+map(sq, [y for y in range(10)])
+
+对于 def sq(x):
+    return x * x ，使用lambda 替换，直接使用就是 map( lambda x: x*x, [y for y in range(10)] )

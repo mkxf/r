@@ -17,3 +17,7 @@
    public void setspellCheckerX( SpellChecker spellCheckerXx ){
       this.spellCheckerX = spellCheckerXx;
    }
+
+ 5.  @Autowired 的（required=false）选项
+默认情况下，@Autowired 注释意味着依赖是必须的，它类似于 @Required 注释，
+然而，你可以使用 @Autowired 的 （required=false） 选项关闭默认行为。

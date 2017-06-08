@@ -1,0 +1,41 @@
+安装增强时，提示不在 sudoers中
+把当前用户加到此文件中即可
+1. 权限，2 增加，3.恢复权限
+
+--
+1、切换到root用户权限
+[user@Compile ~]$ su root
+--
+2、查看/etc/sudoers文件权限，
+
+[root@Compile user]# ls -l /etc/sudoers
+-r--r-----. 1 root root 4030 9月  25 00:57 /etc/sudoers
+
+3.如果只读权限，修改为可写权限
+
+[root@Compile user]# chmod 777 /etc/sudoers
+确认：
+[root@Compile user]# ls -l /etc/sudoers
+-rwxrwxrwx. 1 root root 4030 9月  25 00:57 /etc/sudoers
+
+4.执行vi命令，编辑/etc/sudoers文件
+执行vi命令，编辑/etc/sudoers文件，添加要提升权限的用户；在文件中找到root  ALL=(ALL) ALL，
+在该行下添加提升权限的用户信息，如：
+root    ALL=(ALL)       ALL
+user    ALL=(ALL)       ALL
+说明：格式为（用户名    网络中的主机=（执行命令的目标用户）    执行的命令范围）
+
+直接使用的是 
+d     ALL=(ALL)       ALL
+
+5. 保存退出，恢复权限为440
+[root@Compile user]# chmod 440 /etc/sudoers
+[root@Compile user]# ls -l /etc/sudoers
+-r--r-----. 1 root root 4030 9月  25 00:57 /etc/sudoers
+
+6. 切换到普通用户，测试权限
+ su d
+
+ --  
+ su 是在root 和  普通用户之间进行切换
+ 切到root 可以省略

@@ -1,0 +1,7 @@
+ 打开 Eclipse，菜单栏 Help -- Install New Software，弹出 install 窗口，
+ 在 Work with 中输入 http://download.eclipse.org/releases/indigo，等待获取插件内容。然后找到
+        
+1.png
+
+        然后 Next，安装即可。
+        安装好后，重启 Eclipse。 菜单栏 Help 中就会出现 Eclipse Marketplace。

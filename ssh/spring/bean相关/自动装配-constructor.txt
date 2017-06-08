@@ -1,0 +1,45 @@
+与 byType 非常相似，但它应用于构造器参数
+
+ 1. XML 配置文件中 beans 的 autowire 属性设置为 constructor。
+ 2. 然后，它尝试把它的构造函数的参数与配置文件中 beans 名称中的一个进行匹配和连线。
+ 3. 如果找到匹配项，它会注入这些 bean，
+ 4. 否则，它会抛出异常。
+
+
+  SpellChecker 类型的参数之一的构造函数
+
+  public TextEditor( SpellChecker spellChecker, String name ) {
+      this.spellChecker = spellChecker;
+      this.name = name;
+   }
+
+ -----
+ <beans  .. >
+   <!-- Definition for textEditor bean -->
+   <bean id="textEditor" class="com.tutorialspoint.TextEditor">
+      <constructor-arg  ref="spellChecker" />
+      <constructor-arg  value="Generic Text Editor"/>
+   </bean>
+
+   <!-- Definition for spellChecker bean -->
+   <bean id="spellChecker" class="com.tutorialspoint.SpellChecker">
+   </bean>
+
+</beans>
+
+
+-> 1. autowire="constructor" 
+   2. remove <constructor-arg  ref="spellChecker" />
+
+ <beans  .. >
+    <!-- Definition for textEditor bean -->
+   <bean id="textEditor" class="com.tutorialspoint.TextEditor" 
+      autowire="constructor">
+      <constructor-arg value="Generic Text Editor"/>
+   </bean>
+
+   <!-- Definition for spellChecker bean -->
+   <bean id="SpellChecker" class="com.tutorialspoint.SpellChecker">
+   </bean>
+
+</beans>

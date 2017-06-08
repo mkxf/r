@@ -1,0 +1,35 @@
+@import 注解允许从另一个配置类中加载 @Bean 定义
+-----
+@Configuration
+public class ConfigA {
+   @Bean
+   public A a() {
+      return new A(); 
+   }
+}
+----
+另一个 Bean 声明中导入上述 Bean 声明
+--------
+@Configuration
+@Import(ConfigA.class)
+public class ConfigB {
+   @Bean
+   public B a() {
+      return new A(); 
+   }
+}
+-------
+
+实例化上下文时,只需要 ConfigB 类
+
+---
+
+public static void main(String[] args) {
+   ApplicationContext ctx = 
+   new AnnotationConfigApplicationContext(ConfigB.class);
+   // now both beans A and B will be available...
+   A a = ctx.getBean(A.class);
+   B b = ctx.getBean(B.class);
+}
+
+----

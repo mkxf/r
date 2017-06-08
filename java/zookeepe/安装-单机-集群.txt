@@ -1,0 +1,29 @@
+window7 （解压，修改配置文件）
+1. 官网下载，选择金山镜像会快点
+	zookeeper-3.4.9.tar.gz 
+2. 解压
+3. 修改配置：
+	conf
+	修改zoo_sample.cfg 为 zoo.cfg
+		修改 
+		dataDir=D:\\softForge\\zookeeper-3.4.9\\data
+		dataLogDir=D:\\softForge\\zookeeper-3.4.9\\log
+
+		如果集群
+		在最后增加
+		server.1=127.0.0.1:2888:3888  
+		server.2=127.0.0.1:2882:3882
+		伪集群修改为不同的端口,不是端口相同
+		 clientPort 也需要修改
+4 单机不需要
+	在上边的dataDir 也就是data目录中，新建myid文件，里边就一个数字，对应server的数目
+	如上边的server.1，对应 1 （就一个数字）
+5. 启动 
+	bin/zkServer.cmd 
+	双击启动
+
+验证： netstat – ano|findstr "端口"  
+	必须双引号
+
+集群时先启动一个，会报错，另一个也启动就正常
+ 
