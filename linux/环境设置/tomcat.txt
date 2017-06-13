@@ -1,0 +1,35 @@
+
+安装路径  /opt/tomcat/tomcat8
+tomcat8 启动 
+sh /opt/tomcat/tomcat8/bin/startup.sh
+
+带详细输出信息：
+sh /opt/tomcat/tomcat8/bin/startup.sh;tail -200f /opt/tomcat/tomcat8/logs/catalina.out
+
+关闭
+
+sh /opt/tomcat/tomcat8/bin/shutdown.sh
+
+-------  /etc/init.d/tomcat8
+
+export CATALINA_HOME=/opt/tomcat
+export JAVA_HOME=/opt/jdk/jdk1.8.0_131
+export PATH=$JAVA_HOME/bin:$PATH
+
+start() {
+ echo "Starting Tomcat 8..."
+ /bin/su -s /bin/bash tomcat -c $CATALINA_HOME/bin/startup.sh
+}
+stop() {
+ echo "Stopping Tomcat 8..."
+ /bin/su -s /bin/bash tomcat -c $CATALINA_HOME/bin/shutdown.sh
+}
+case $1 in
+  start|stop) $1;;
+  restart) stop; start;;
+  *) echo "Usage : $0 "; exit 1;;
+esac
+
+exit 0
+
+----

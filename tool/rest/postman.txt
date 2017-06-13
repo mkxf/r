@@ -1,0 +1,15 @@
+1.输入地址 http://192.168.100.5:22001/mampbusi/ws/sales/draw/user/userParticip/
+2. 选择方式， POST
+3. 点击body
+	a.选择 raw， 后边选择 JSON(application/json)
+		--  headers 处 填写 Content-Type application/json 就不用选择json（自动选择）
+	b.输入参数
+	{"params":{"odrId":"20170525111317610304220","rechrgSts":"00","rmk":"F->S","opUserId":"1","opSysId":"1400"},"beans":[],"object":null}
+
+4. 点击send 即可
+
+---
+保存到集合中
+1. 点击save
+2. 在弹窗里边选择要保存到的文件夹
+   

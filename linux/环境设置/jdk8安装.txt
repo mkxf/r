@@ -1,0 +1,76 @@
+解压、配置、替换
+------------
+from ->
+----------
+自带的有jdk7
+查看：
+root@debian:~# java -version
+java version "1.7.0_121"
+root@debian:~# javac -version
+bash: javac: 未找到命令
+-----------
+to ->
+------------------
+现在安装jdk8 并替换自带的7
+1. 外部环境下载 jdk-8u131-linux-i586.tar.gz ，并放到共享文件夹中
+2. 查看、创建、查看 要使用的jdk目录 /opt/jdk
+root@debian:~# pwd
+/root
+root@debian:~# ls /opt/jdk
+ls: 无法访问/opt/jdk: 没有那个文件或目录
+root@debian:~# mkdir /opt/jdk
+root@debian:~# cd /opt/jdk
+root@debian:/opt/jdk# pwd
+/opt/jdk
+
+3. copy 安装文件到当前目录  cp [options]  <source file or directory ..> <target file or directory>
+当前目录就用 ./ 表示
+root@debian:/opt/jdk# cp /media/sf_winLinuxShare/jdk-8u131-linux-i586.tar.gz ./
+root@debian:/opt/jdk# ls
+jdk-8u131-linux-i586.tar.gz
+
+4. 解压并进入新文件中
+root@debian:/opt/jdk# tar -zxf jdk-8u131-linux-i586.tar.gz
+root@debian:/opt/jdk# ls
+jdk1.8.0_131  jdk-8u131-linux-i586.tar.gz
+
+5. 查看
+root@debian:/opt/jdk/jdk1.8.0_131/bin# ls
+
+6. 设置当前jdk 到多版本中，并设置优先级为100
+root@debian:/opt/jdk/jdk1.8.0_131# update-alternatives --install /usr/bin/java java /opt/jdk/jdk1.8.0_131/bin/java 100
+root@debian:/opt/jdk/jdk1.8.0_131# update-alternatives --install /usr/bin/javac javac /opt/jdk/jdk1.8.0_131/bin/javac 100
+update-alternatives: 使用 /opt/jdk/jdk1.8.0_131/bin/javac 来在自动模式中提供 /usr/bin/javac (javac)
+
+7. 替换默认jdk
+root@debian:/opt/jdk/jdk1.8.0_131# update-alternatives --config java
+有 2 个候选项可用于替换 java (提供 /usr/bin/java)。
+
+  选择       路径                                         优先级  状态
+------------------------------------------------------------
+* 0            /usr/lib/jvm/java-7-openjdk-i386/jre/bin/java   1071      自动模式
+  1            /opt/jdk/jdk1.8.0_131/bin/java                  100       手动模式
+  2            /usr/lib/jvm/java-7-openjdk-i386/jre/bin/java   1071      手动模式
+
+要维持当前值[*]请按回车键，或者键入选择的编号：1
+update-alternatives: 使用 /opt/jdk/jdk1.8.0_131/bin/java 来在手动模式中提供 /usr/bin/java (java)
+root@debian:/opt/jdk/jdk1.8.0_131# update-alternatives --config javac
+链接组 javac (提供 /usr/bin/javac)中只有一个候选项：/opt/jdk/jdk1.8.0_131/bin/javac
+无需配置。
+
+8.查看
+root@debian:/opt/jdk/jdk1.8.0_131# java -version
+java version "1.8.0_131"
+Java(TM) SE Runtime Environment (build 1.8.0_131-b11)
+Java HotSpot(TM) Client VM (build 25.131-b11, mixed mode)
+root@debian:/opt/jdk/jdk1.8.0_131# javac -version
+javac 1.8.0_131
+
+9. other
+不用设置 环境变量，上边方式不用设置
+
+环境变量 在 /etc/profile 设置
+
+root@debian:~# vi /etc/profile
+ root@debian:~# java -version
+java version "1.8.0_131"
