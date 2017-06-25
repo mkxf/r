@@ -2,6 +2,15 @@
 初始化
 $git init
 
+—---
+下载到本地就不需要 init ，直接 clone 就可以
+git clone git@github.com:mkxf/r.git
+记得进入到 下载到这个目录，然后查看远程关联
+git remote -v
+git remote rm origin
+删除掉不需要的
+—---
+
 $ ssh-keygen -t rsa -C "mkxf@163.com"
  
 	 下边出来的目录输入和密码都不填，直接回车
