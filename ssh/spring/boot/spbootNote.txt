@@ -1,0 +1,19 @@
+ --p 表示相关文件在 pom 文件夹
+ --c 表示相关文件在 code 文件夹
+
+11.5 Creating an executable jar 
+    java  不支持jar 嵌套，即 一个jar里边还有jar
+    有一种的解决方法是，把所有的类打包到一个新jar中
+	很难看出来使用的是哪个jar包
+	
+	  sp 直接对jar 嵌套
+  1.   要创建一个可执行的jar，我们需要添加spring-boot-maven-plugin 到
+	   我们的 pom.xml  ，dependencies 后边添加  --p
+		
+		
+	The spring-boot-starter-parent POM includes <executions> configuration 
+		to bind the repackage goal. If you are not using the parent POM 
+		you will need to declare this configuration yourself. 
+	See the plugin documentation for details.
+
+  2. 

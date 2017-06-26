@@ -1,0 +1,31 @@
+
+ CLI 测试： $ spring run app.groovy  
+	Open localhost:8080
+---------
+1.
+$ java -version
+	java >=8
+$ mvn -v
+	mvn >3.2
+	
+2. pom.xml
+
+3. $  mvn package
+	$ mvn dependency:tree
+4. java code in  src/main/java/Example.java
+5. $ mvn spring-boot:run 
+	Open localhost:8080
+	------
+	 jar -cvf targetfile.jar source.class .... 创建一个jar文件
+	 jar -tvf target.jar 查看jar文件 
+	 jar -xvf target.jar 解开jar文件
+	-----------
+create  jar
+1. $ mvn package
+-- 2. $ jar tvf target/myproject-0.0.1-SNAPSHOT.jar 
+	打包并显示jar包生成的class文件所在目录以及名称
+3. $ java -jar target/stExm-0.0.1-SNAPSHOT.jar
+	
+	Open localhost:8080
+
+

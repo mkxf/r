@@ -1,0 +1,21 @@
+ 打包
+-- jar
+示例 1: 将两个类文件归档到一个名为 classes.jar 的档
+       jar cvf classes.jar Foo.class Bar.class
+示例 2: 使用现有的清单文件 'mymanifest' 并
+           将 foo/ 目录中的所有文件归档到 'classes.
+       jar cvfm classes.jar mymanifest -C foo/ .
+
+
+一.jar cvf 生成jar包的完整名称 要生成的class文件所在目录以及名称
+   输出详细信息
+二.jar cf 生成jar包的完整名称 要生成的class文件所在目录以及名称
+   不输出
+三.jar tf 生成jar包的完整名称 要生成的class文件所在目录以及名称
+
+　　使用方法同上。区别是该命令会显示文件中包含的所有目录和文件名列表。笔者这里就不一一演示了。
+
+四.jar tvf 生成jar包的完整名称 要生成的class文件所在目录以及名称
+
+　　使用方法同上。区别是除了显示文件中包含的所有目录信息和文件列表以外,
+还会显示各目录和文件的大小、创建时间等信息。

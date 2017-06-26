@@ -1,0 +1,76 @@
+1. export SDKMAN_DIR="D:/Tools/sdkman" && curl -s "https://get.sdkman.io" | bash
+2. source "D:/Tools/sdkman/bin/sdkman-init.sh"
+3. sdk version
+
+------------
+curl -s "https://get.sdkman.io" | bash
+
+--  自定义目录，不能有sdkman这个目录 $ export SDKMAN_DIR="D:/Tools/sdkman" && curl -s "https://get.sdkman.io" | bash
+--   source "D:/Tools/sdkman/bin/sdkman-init.sh"
+
+
+-------  不要放在其他位置，关闭窗口再打开会找不到命令sdk
+
+-- 成功后在  D:/Tools/sdkman 里边 D:/Tools/sdkman/bin
+--   不要cp到其他地方
+
+$ source "/c/Users/mk/.sdkman/bin/sdkman-init.sh"
+
+mk@mk-PC MINGW64 /d/Tools/sdkman
+$ sdk version
+==== INTERNET NOT REACHABLE! ===================================================
+
+ Some functionality is disabled or only partially available.
+ If this persists, please enable the offline mode:
+
+   $ sdk offline
+
+================================================================================
+
+
+SDKMAN 5.5.9+231
+
+mk@mk-PC MINGW64 /d/Tools/sdkman
+$ ^C
+
+mk@mk-PC MINGW64 /d/Tools/sdkman
+$ sdk offline
+Offline mode enabled.
+
+mk@mk-PC MINGW64 /d/Tools/sdkman
+$ sdk version
+
+SDKMAN 5.5.9+231
+
+mk@mk-PC MINGW64 /d/Tools/sdkman
+
+
+
+
+--
+Attempt update of bash profiles...
+Created and initialised /c/Users/mk/.bash_profile
+Created and initialised /c/Users/mk/.bashrc
+Attempt update of zsh profiles...
+Created and initialised /c/Users/mk/.zshrc
+..
+
+  source "/c/Users/mk/.sdkman/bin/sdkman-init.sh"
+
+---
+
+source "/c/Users/mk/.sdkman/bin/sdkman-init.sh"
+--------
+
+
+----  install local
+D:\Tools\cli\spring-2.0.0.BUILD-SNAPSHOT
+
+--  R  ,不要 ：D:\Tools\cli\spring-2.0.0.BUILD-SNAPSHOT  ->
+ 
+$ sdk install springboot dev /D/Tools/cli/spring-2.0.0.BUILD-SNAPSHOT
+$ sdk default springboot dev
+$ spring --version
+Spring CLI v2.0.0.BUILD-SNAPSHOT
+
+sdk install springboot 2.0.0.BUILD-SNAPSHOT

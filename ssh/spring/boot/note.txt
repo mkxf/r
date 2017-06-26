@@ -1,0 +1,222 @@
+P3  使用spring boot (sb)
+ 13  构建系统
+	建议使用选择 maven、gradle构建系统，
+	支持依赖管理，能够发布到maven仓库，
+
+	ant现在也可以，但以后不支持
+
+13.1 依赖管理
+	sb 对依赖包进行管理包括版本，升级时相关的也会升级 
+	
+	可以指定某个包的版本 替换 sb中的
+
+	但是sb与spring Framework 版本关联很强，不要替换
+
+13.2 Maven
+	使用maven 从 spring-boot-starter-parent 继承的默认值有
+	1. 默认编辑java1.8
+	2. 编码 UTF-8
+	3.依赖管理 不用指定 <version>， sb中有
+	4. 明智的资源过滤。 Sensible resource filtering.
+	5.明智的插件配置（exec plugin， surefire， Git commit ID， shade）。
+	6. 资源过滤 application.properties and application.yml，
+		包括特定配置文件 application-foo.properties and application-foo.yml)
+	7. spring 使用 ${…​}作为 占位符，maven就使用了 @..@ （maven 的 resource.delimiter 配置）
+		
+13.2.1 继承 starter parent
+	继续 spring-boot-starter-parent 即可
+	只需指定 sb的版本，其他增加的 starters 不用指定
+  -- 
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>2.0.0.BUILD-SNAPSHOT</version>
+</parent>
+ -- 
+  指定自己使用的 Spring Data  版本
+   --p
+  <properties>
+    <spring-data-releasetrain.version>Fowler-SR2</spring-data-releasetrain.version>
+</properties>
+  
+  13.2.2 不使用parent 
+       可能自己公司有 parent ，所以不用 spring-boot-starter-parent
+
+       可以使用 scope=import 进行依赖管理
+
+	 <dependencyManagement>
+	     <dependencies>
+		<dependency>
+		    <!-- Import dependency management from Spring Boot -->
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-dependencies</artifactId>
+		    <version>2.0.0.BUILD-SNAPSHOT</version>
+		    <type>pom</type>
+		    <scope>import</scope>
+		</dependency>
+	    </dependencies>
+	</dependencyManagement>
+
+	但是 版本覆盖时， 不再允许使用 property 属性  L-> --p
+	并且 写到 spring-boot-dependencies 前边
+	<dependencyManagement>
+		<dependencies>
+		..
+		spring-data-releasetrain
+		..
+		spring-boot-dependencies
+		..
+	</..>
+
+13.2.3 
+	spring-boot-maven-plugin 插件可以把项目打成一个可执行的jar包
+
+  <build>  <plugins>  <plugin> .. spring-boot-maven-plugin ..</..>
+
+13.2.4
+	gradle  ant 
+
+13.2.5
+	各个模块都有各自的作用
+
+spring-boot- + 特定类型的应用程序
+	第三方的应以 第三方开头
+
+spring-boot-starter
+核心启动器，包括自动配置支持，日志记录和YAML
+
+spring-boot-starter-activemq
+使用Apache ActiveMQ启动JMS消息传递
+
+spring-boot-starter-amqp
+使用Spring AMQP和Rabbit MQ的入门手册
+
+spring-boot-starter-aop
+Spring AOP和AspectJ的面向方面的编程入门
+
+spring-boot-starter-artemis
+使用Apache Artemis启动JMS消息传递
+
+spring-boot-starter-batch
+启动器使用Spring Batch
+
+spring-boot-starter-cache
+启动Spring框架的缓存支持
+
+spring-boot-starter-cloud-connectors
+使用Spring Cloud连接器的入门者，可简化与Cloud Foundry和Heroku等云平台中的服务连接
+
+spring-boot-starter-data-cassandra
+使用Cassandra分布式数据库和Spring数据Cassandra的入门手册
+
+spring-boot-starter-data-cassandra-reactive
+使用Cassandra分布式数据库和Spring数据的入门Cassandra反应
+
+spring-boot-starter-data-couchbase
+启动器使用Couchbase面向文档的数据库和Spring Data Couchbase
+
+spring-boot-starter-data-elasticsearch
+使用Elasticsearch搜索和分析引擎和Spring Data Elasticsearch的入门手册
+
+spring-boot-starter-data-jpa
+启动使用Spring数据JPA与休眠
+
+spring-boot-starter-data-ldap
+启动使用Spring数据LDAP
+
+spring-boot-starter-data-mongodb
+Starter使用MongoDB面向文档的数据库和Spring数据MongoDB
+
+spring-boot-starter-data-mongodb-reactive
+Starter使用MongoDB面向文档的数据库和Spring数据库MongoDB反应
+
+spring-boot-starter-data-neo4j
+使用Neo4j图数据库和Spring Data Neo4j的入门手册
+
+spring-boot-starter-data-redis
+Starter Redis和Jedis客户端使用Redis键值数据存储的入门手段
+
+spring-boot-starter-data-redis-reactive
+使用Redis键盘值数据存储的启动器与Spring Data Redis无效和莴苣客户端
+
+spring-boot-starter-data-rest
+使用Spring数据REST将REST数据存储库通过REST暴露的入门工具
+
+spring-boot-starter-data-solr
+Spring Data Solr使用Apache Solr搜索平台的入门手册
+
+spring-boot-starter-freemarker
+使用FreeMarker视图构建MVC Web应用程序的入门者
+
+spring-boot-starter-groovy-templates
+使用Groovy模板视图构建MVC Web应用程序的入门手册
+
+spring-boot-starter-hateoas
+使用Spring MVC和Spring HATEOAS构建基于超媒体的RESTful Web应用程序的入门手册
+
+spring-boot-starter-integration
+启动Spring集成
+
+spring-boot-starter-jdbc
+使用JDBC与Tomcat JDBC连接池的入门工具
+
+spring-boot-starter-jersey
+使用JAX-RS和泽西构建RESTful Web应用程序的入门工具。一个替代spring-boot-starter-web
+
+spring-boot-starter-jooq
+使用jOOQ访问SQL数据库的入门手册 spring-boot-starter-data-jpa或替代或spring-boot-starter-jdbc
+
+spring-boot-starter-jta-atomikos
+使用Atomikos进行JTA交易的起始者
+
+spring-boot-starter-jta-bitronix
+使用Bitronix的JTA交易启动器
+
+spring-boot-starter-jta-narayana
+春天靴Narayana JTA起动器
+
+spring-boot-starter-mail
+Starter用于使用Java Mail和Spring Framework的电子邮件发送支持
+
+spring-boot-starter-mobile
+使用Spring Mobile构建Web应用程序的入门者
+
+spring-boot-starter-mustache
+使用Mustache视图构建Web应用程序的入门工具
+
+spring-boot-starter-quartz
+弹簧起子石英起动器
+
+spring-boot-starter-security
+启动Spring Security
+
+spring-boot-starter-social-facebook
+启动Spring Social Facebook
+
+spring-boot-starter-social-linkedin
+使用Spring Social LinkedIn
+
+spring-boot-starter-social-twitter
+启动Spring社交Twitter
+
+spring-boot-starter-test
+用于使用JUnit，Hamcrest和Mockito的库测试Spring Boot应用程序的入门工具
+
+spring-boot-starter-thymeleaf
+使用Thymeleaf视图构建MVC Web应用程序的入门手册
+
+spring-boot-starter-validation
+使用Java Bean验证与Hibernate验证器的入门手册
+
+spring-boot-starter-web
+用于构建Web的入门者，包括使用Spring MVC的RESTful应用程序。使用Tomcat作为默认的嵌入式容器
+
+spring-boot-starter-web-services
+使用Spring Web Services的入门手册
+
+spring-boot-starter-webflux
+使用Spring Framework的反向Web支持构建WebFlux应用程序的入门者
+
+spring-boot-starter-websocket
+使用Spring Framework的WebSocket支持构建WebSocket应用程序的入门工具
+	
