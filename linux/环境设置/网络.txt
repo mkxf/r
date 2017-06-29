@@ -1,0 +1,50 @@
+虚拟机网络
+
+NAT模式
+	只能单向访问，虚拟机可以通过网络访问到主机，
+	主机无法通过网络访问到虚拟机。
+
+ Bridged Adapter模式（桥接模式）
+
+	虚拟机与主机关系： 可以相互访问，
+	因为虚拟机在真实网络段中有独立IP，
+	主机与虚拟机处于同一网络段中，彼此可以通过各自IP相互访问。
+
+Host-only Adapter模式
+	默认不能相互访问，双方不属于同一IP段
+	  在主机无法上网的情况下（主机可以上网的情况下可以用host-only，也可以用桥接），需要搭建一个模拟局域网，所有机器可以互访
+
+   但更改后可以
+
+  ------------
+
+1.添加Host-Only全局网卡
+
+VirtualBox通过Host-Only来实现主机与虚拟机之间的互相访问
+
+2. 为虚拟机新添加一张虚拟网卡
+
+默认在新建虚拟机之后，VB已经为该虚拟机添加了一张虚拟网卡，
+采用NAT模式。这样虚拟机就可以实现互联网访问了。
+
+但是我们要实现虚拟机和主机的互相访问，
+那么就可以新添加一张网卡，模式使用Host-only方式。
+
+3.配置虚拟机
+在网卡添加好之后，即可启动虚拟机进行网络的配置。
+ 打开 /etc/network/interfaces 文件。编辑如下内容：
+
+	uto eth0 
+	allow-hotplug eth0
+	iface eth0 inet dhcp 
+
+	#IP should be same with the ip of Virtualbox host-only interface
+	auto eth1
+	iface eth1 inet static
+	   address 192.168.56.101 
+	   netmask 255.255.255.0
+	   gateway 192.168.56.1
+
+4. 配置完成之后，使用 service networking restart 重启网络，让配置生效。
+
+5. 通过互Ping主机和虚拟机，大功告成，同时虚拟机也可以上网了

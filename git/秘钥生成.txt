@@ -11,6 +11,14 @@ git remote rm origin
 删除掉不需要的
 —---
 
+检查已有的配置信息，可以使用 git config --list
+
+user.email=mkxf@163.com
+user.name=穆凯
+alias.cm=commit -m
+
+
+-----------------------
 $ ssh-keygen -t rsa -C "mkxf@163.com"
  
 	 下边出来的目录输入和密码都不填，直接回车

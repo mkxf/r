@@ -1,0 +1,44 @@
+1. 解压tomcat压缩包
+
+	 cd /usr/local/
+	 tar -zxvf apache-tomcat-7.0.61.tar.gz
+
+	 # 解压成功后得到 apache-tomcat-7.0.61 文件夹，更名为tomcat7
+	 mv apache-tomcat-7.0.61 tomcat7
+
+2. 配置环境变量
+
+	vi /etc/profile
+
+	 #在文件最后加上以下配置
+
+	 #tomcat evn
+	 CATALINA_HOME=/usr/local/tomcat7
+	 export CATALINA_HOME
+	 #保存退出后执行下面的命令,使其生效
+	 source /etc/profile
+
+ 3. 配置tomcat的catalina.sh文件
+
+	 #进入tomcat的bin目录
+	 cd $CATALINA_HOME/bin
+	 vi catalina.sh
+	 #找到 # OS specific support，然后在这行下面添加以下配置
+
+	 # OS specific support.  $var _must_ be set to either true or false.
+	 CATALINA_HOME=/usr/local/tomcat7
+	 JAVA_HOME=/usr/local/jdk1.7.0_45
+	 #保存退出
+4. 安装tomcat服务
+	cd $CATALINA_HOME/bin
+	cp catalina.sh /etc/init.d/tomcat
+
+5.测试tomcat启动和停用
+	 # 启动
+	 service tomcat start
+	 #停用
+	 service tomcat stop
+
+	 #没有报错的话，证明已经配置成功了
+
+ service tomcat start;tail -200f /opt/tomcat/tomcat8/logs/catalina.out
