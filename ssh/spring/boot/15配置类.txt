@@ -1,0 +1,14 @@
+15. Configuration classes
+	
+	Many Spring configuration examples have been published on the Internet 
+	that use XML configuration. Always try to use the equivalent 
+	Java-based configuration if possible. 
+
+	Searching for Enable* annotations can be a good starting point.
+
+ 15.1 Importing additional configuration classes
+	@Import 导入配置类，而不是每个上边都配置一个 @Configuration 
+	另外 @ComponentScan 能够扫描包括 @Configuration 在内的所有组件
+15.2 Importing XML configuration
+	如果是xml配置的项目，仍可以start with a @Configuration class ，
+	通过 @ImportResource 加载 xml 配置

@@ -1,0 +1,43 @@
+17. Spring Beans and dependency injection
+	使用 @ComponentScan 能够发现所有的bean， 
+	使用 @Autowired 进行构造注入
+
+	@ComponentScan 不带参数的话，所有组件
+	（ @Component, @Service, @Repository, @Controller etc ）
+	都会被自动注册成spring beans.
+
+	例如：
+	----------code
+
+		@Service
+		public class DatabaseAccountService implements AccountService {
+
+		    private final RiskAssessor riskAssessor;
+
+		    @Autowired
+		    public DatabaseAccountService(RiskAssessor riskAssessor) {
+			this.riskAssessor = riskAssessor;
+		    }
+
+		    // ...
+
+		}
+
+	----------
+	如果只有一个构造方法， @Autowired 可以省略
+
+	 --------code	
+
+	@Service
+	public class DatabaseAccountService implements AccountService {
+
+	    private final RiskAssessor riskAssessor;
+
+	    public DatabaseAccountService(RiskAssessor riskAssessor) {
+		this.riskAssessor = riskAssessor;
+	    }
+
+	    // ...
+
+	}
+	-----------

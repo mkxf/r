@@ -1,0 +1,21 @@
+18. Using the @SpringBootApplication annotation
+
+	@SpringBootApplication = sum（ @Configuration  @EnableAutoConfiguration  @ComponentScan ）
+
+	sb中特别提供一个  @SpringBootApplication 注解
+	来代替 @Configuration, @EnableAutoConfiguration and @ComponentScan 这3个
+	这3个经常一起在主类上进行使用。
+
+-----------------  1 = 3
+	@SpringBootApplication // same as @Configuration @EnableAutoConfiguration @ComponentScan
+	public class Application {
+
+	    public static void main(String[] args) {
+		SpringApplication.run(Application.class, args);
+	    }
+
+	}
+
+---------------------
+提供自定义属性的别名
+@SpringBootApplication also provides aliases to customize the attributes of @EnableAutoConfiguration and @ComponentScan.

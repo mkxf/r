@@ -1,0 +1,146 @@
+ --p 表示相关文件在 pom 文件夹
+ --c 表示相关文件在 code 文件夹
+
+11.5 Creating an executable jar 
+    java  不支持jar 嵌套，即 一个jar里边还有jar
+    有一种的解决方法是，把所有的类打包到一个新jar中
+	很难看出来使用的是哪个jar包
+	
+	  sp 直接对jar 嵌套
+  1.   要创建一个可执行的jar，我们需要添加spring-boot-maven-plugin 到
+	   我们的 pom.xml  ，dependencies 后边添加  --p
+		
+		
+	The spring-boot-starter-parent POM includes <executions> configuration 
+		to bind the repackage goal. If you are not using the parent POM 
+		you will need to declare this configuration yourself. 
+	See the plugin documentation for details.
+
+  2. $ mvn package
+
+	target/myproject-0.0.1-SNAPSHOT.jar
+
+查看jar原来包
+
+	$ jar tvf target/myproject-0.0.1-SNAPSHOT.jar  
+	在控制台可以看出原来有哪些jar包   -- S
+
+	-- 能够看到一个很小名字叫 myproject-0.0.1-SNAPSHOT.jar.original 的文件，是maven创建并由sb重新打包
+	
+
+执行jar包
+
+   $ java -jar target/myproject-0.0.1-SNAPSHOT.jar
+   
+   
+ ------------------------------------------------------------------
+
+
+ -- S
+
+$ jar tvf myproject-0.0.1-SNAPSHOT.jar
+     0 Tue Jun 20 10:59:56 CST 2017 META-INF/
+   516 Tue Jun 20 10:59:56 CST 2017 META-INF/MANIFEST.MF
+     0 Tue Jun 20 10:54:26 CST 2017 META-INF/maven/
+     0 Tue Jun 20 10:54:26 CST 2017 META-INF/maven/com.example/
+     0 Tue Jun 20 10:54:26 CST 2017 META-INF/maven/com.example/myproject/
+     0 Tue Jun 20 10:59:56 CST 2017 BOOT-INF/
+     0 Tue Jun 20 10:59:56 CST 2017 BOOT-INF/classes/
+   956 Tue Jun 20 10:58:06 CST 2017 BOOT-INF/classes/Example.class
+   221 Tue Jun 20 10:54:28 CST 2017 META-INF/maven/com.example/myproject/pom.pro                                                                                                                perties
+  1866 Tue Jun 20 10:54:28 CST 2017 META-INF/maven/com.example/myproject/pom.xml
+     0 Tue Jun 20 10:59:56 CST 2017 BOOT-INF/lib/
+  2304 Mon Jun 19 11:04:52 CST 2017 BOOT-INF/lib/spring-boot-starter-web-2.0.0.B                                                                                                                UILD-SNAPSHOT.jar
+  2272 Mon Jun 19 11:04:34 CST 2017 BOOT-INF/lib/spring-boot-starter-2.0.0.BUILD                                                                                                                -SNAPSHOT.jar
+766616 Mon Jun 19 10:48:28 CST 2017 BOOT-INF/lib/spring-boot-2.0.0.BUILD-SNAPSHO                                                                                                                T.jar
+1138887 Mon Jun 19 10:59:42 CST 2017 BOOT-INF/lib/spring-boot-autoconfigure-2.0.                                                                                                                0.BUILD-SNAPSHOT.jar
+  2288 Mon Jun 19 11:04:34 CST 2017 BOOT-INF/lib/spring-boot-starter-logging-2.0                                                                                                                .0.BUILD-SNAPSHOT.jar
+290339 Fri Mar 31 21:27:54 CST 2017 BOOT-INF/lib/logback-classic-1.2.3.jar
+471901 Fri Mar 31 21:27:16 CST 2017 BOOT-INF/lib/logback-core-1.2.3.jar
+ 41203 Thu Mar 16 17:36:32 CST 2017 BOOT-INF/lib/slf4j-api-1.7.25.jar
+  4596 Thu Mar 16 17:37:48 CST 2017 BOOT-INF/lib/jul-to-slf4j-1.7.25.jar
+ 23645 Thu Mar 16 17:37:40 CST 2017 BOOT-INF/lib/log4j-over-slf4j-1.7.25.jar
+1187406 Wed Jun 14 09:26:12 CST 2017 BOOT-INF/lib/spring-core-5.0.0.RC2.jar
+ 14027 Wed Jun 14 09:26:02 CST 2017 BOOT-INF/lib/spring-jcl-5.0.0.RC2.jar
+284338 Wed Feb 22 13:17:30 CST 2017 BOOT-INF/lib/snakeyaml-1.18.jar
+  2307 Mon Jun 19 11:04:52 CST 2017 BOOT-INF/lib/spring-boot-starter-json-2.0.0.                                                                                                                BUILD-SNAPSHOT.jar
+1316975 Tue Apr 25 05:46:34 CST 2017 BOOT-INF/lib/jackson-databind-2.9.0.pr3.jar
+ 66528 Mon Apr 24 22:31:40 CST 2017 BOOT-INF/lib/jackson-annotations-2.9.0.pr3.j                                                                                                                ar
+286706 Mon Apr 24 22:36:38 CST 2017 BOOT-INF/lib/jackson-core-2.9.0.pr3.jar
+ 25214 Tue Apr 25 06:01:52 CST 2017 BOOT-INF/lib/jackson-datatype-jdk8-2.9.0.pr3                                                                                                                .jar
+ 93315 Tue Apr 25 06:02:00 CST 2017 BOOT-INF/lib/jackson-datatype-jsr310-2.9.0.p                                                                                                                r3.jar
+  8644 Tue Apr 25 06:01:32 CST 2017 BOOT-INF/lib/jackson-module-parameter-names-                                                                                                                2.9.0.pr3.jar
+  2275 Mon Jun 19 11:04:52 CST 2017 BOOT-INF/lib/spring-boot-starter-tomcat-2.0.                                                                                                                0.BUILD-SNAPSHOT.jar
+3051713 Fri May 05 12:03:34 CST 2017 BOOT-INF/lib/tomcat-embed-core-8.5.15.jar
+239775 Fri May 05 12:03:36 CST 2017 BOOT-INF/lib/tomcat-embed-el-8.5.15.jar
+241872 Fri May 05 12:03:36 CST 2017 BOOT-INF/lib/tomcat-embed-websocket-8.5.15.j                                                                                                                ar
+762113 Thu Mar 16 17:16:16 CST 2017 BOOT-INF/lib/hibernate-validator-5.4.1.Final                                                                                                                .jar
+ 63777 Wed Apr 10 15:02:44 CST 2013 BOOT-INF/lib/validation-api-1.1.0.Final.jar
+ 66023 Wed Mar 15 13:22:08 CST 2017 BOOT-INF/lib/jboss-logging-3.3.1.Final.jar
+ 64982 Tue Sep 27 22:24:16 CST 2016 BOOT-INF/lib/classmate-1.3.3.jar
+1179266 Wed Jun 14 09:28:10 CST 2017 BOOT-INF/lib/spring-web-5.0.0.RC2.jar
+357710 Wed Jun 14 09:26:26 CST 2017 BOOT-INF/lib/spring-aop-5.0.0.RC2.jar
+647064 Wed Jun 14 09:26:22 CST 2017 BOOT-INF/lib/spring-beans-5.0.0.RC2.jar
+1040154 Wed Jun 14 09:26:52 CST 2017 BOOT-INF/lib/spring-context-5.0.0.RC2.jar
+771804 Wed Jun 14 09:28:42 CST 2017 BOOT-INF/lib/spring-webmvc-5.0.0.RC2.jar
+261506 Wed Jun 14 09:26:44 CST 2017 BOOT-INF/lib/spring-expression-5.0.0.RC2.jar
+     0 Tue Jun 20 10:59:56 CST 2017 org/
+     0 Tue Jun 20 10:59:56 CST 2017 org/springframework/
+     0 Tue Jun 20 10:59:56 CST 2017 org/springframework/boot/
+     0 Tue Jun 20 10:59:56 CST 2017 org/springframework/boot/loader/
+  2415 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/LaunchedURLC                                                                                                                lassLoader$1.class
+  1165 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/ExecutableAr                                                                                                                chiveLauncher$1.class
+     0 Tue Jun 20 10:59:56 CST 2017 org/springframework/boot/loader/jar/
+  2002 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/jar/JarFile$                                                                                                                1.class
+  9657 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/jar/Handler.                                                                                                                class
+  3350 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/jar/JarEntry                                                                                                                .class
+  1427 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/jar/JarFile$                                                                                                                3.class
+  3104 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/jar/CentralD                                                                                                                irectoryEndRecord.class
+   430 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/jar/CentralD                                                                                                                irectoryVisitor.class
+  1300 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/jar/JarFile$                                                                                                                JarFileType.class
+ 10924 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/jar/JarFileE                                                                                                                ntries.class
+ 13175 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/jar/JarFile.                                                                                                                class
+  1540 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/jar/JarFileE                                                                                                                ntries$1.class
+   672 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/jar/JarURLCo                                                                                                                nnection$1.class
+  1199 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/jar/JarFile$                                                                                                                2.class
+   262 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/jar/JarEntry                                                                                                                Filter.class
+  4457 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/jar/AsciiByt                                                                                                                es.class
+  4602 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/jar/CentralD                                                                                                                irectoryParser.class
+  2379 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/jar/Bytes.cl                                                                                                                ass
+  1629 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/jar/ZipInfla                                                                                                                terInputStream.class
+  1967 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/jar/JarFileE                                                                                                                ntries$EntryIterator.class
+   306 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/jar/FileHead                                                                                                                er.class
+  3641 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/jar/JarURLCo                                                                                                                nnection$JarEntryName.class
+  9323 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/jar/JarURLCo                                                                                                                nnection.class
+  5449 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/jar/CentralD                                                                                                                irectoryFileHeader.class
+     0 Tue Jun 20 10:59:56 CST 2017 org/springframework/boot/loader/data/
+  1531 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/data/ByteArr                                                                                                                ayRandomAccessData.class
+  3549 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/data/RandomA                                                                                                                ccessDataFile$DataInputStream.class
+  1862 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/data/RandomA                                                                                                                ccessDataFile$FilePool.class
+  1341 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/data/RandomA                                                                                                                ccessData$ResourceAccess.class
+  3319 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/data/RandomA                                                                                                                ccessDataFile.class
+   551 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/data/RandomA                                                                                                                ccessData.class
+  4447 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/LaunchedURLC                                                                                                                lassLoader.class
+  1533 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/JarLauncher.                                                                                                                class
+  1468 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/MainMethodRu                                                                                                                nner.class
+  1425 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/PropertiesLa                                                                                                                uncher$1.class
+  3128 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/ExecutableAr                                                                                                                chiveLauncher.class
+  1669 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/WarLauncher.                                                                                                                class
+     0 Tue Jun 20 10:59:56 CST 2017 org/springframework/boot/loader/archive/
+  1749 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/archive/JarF                                                                                                                ileArchive$EntryIterator.class
+  3792 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/archive/Expl                                                                                                                odedArchive$FileEntryIterator.class
+  1068 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/archive/Expl                                                                                                                odedArchive$FileEntry.class
+  1051 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/archive/JarF                                                                                                                ileArchive$JarFileEntry.class
+  1454 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/PropertiesLa                                                                                                                uncher$ArchiveEntryFilter.class
+   302 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/archive/Arch                                                                                                                ive$Entry.class
+  7571 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/archive/JarF                                                                                                                ileArchive.class
+  5165 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/archive/Expl                                                                                                                odedArchive.class
+   906 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/archive/Arch                                                                                                                ive.class
+  1438 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/archive/Expl                                                                                                                odedArchive$FileEntryIterator$EntryComparator.class
+   399 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/archive/Arch                                                                                                                ive$EntryFilter.class
+   273 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/archive/Expl                                                                                                                odedArchive$1.class
+ 17994 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/PropertiesLa                                                                                                                uncher.class
+     0 Tue Jun 20 10:59:56 CST 2017 org/springframework/boot/loader/util/
+  4887 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/util/SystemP                                                                                                                ropertyUtils.class
+  1912 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/PropertiesLa                                                                                                                uncher$PrefixMatchingArchiveFilter.class
+  4599 Mon Jun 19 10:39:12 CST 2017 org/springframework/boot/loader/Launcher.class                                                                                                                ss

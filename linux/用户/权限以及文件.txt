@@ -1,0 +1,55 @@
+1. /etc/passwd 以前存放用户名以及密码，现在改到 /etc/shadow 
+  文件结构，一行代表一个用户，每一行冒号：分割7段
+	用户名：密码：UID:GID:用户全名:home目录:shell
+
+2. /etc/group 查看组 ，就是GID来源，结构 :分割4段
+	
+	组名:用户组密码:GID:用户组内的用户名
+		-》 组也有密码，给用户组管理员用的，极少用到
+3. 创建用户 （adduser 不同版本不一样，和useradd类似）
+   # useradd userNew 
+	其他的都是默认，包括组名，文件目录（/home下），去用户名相同
+  输入 passwd时，即可设置密码，2次
+	--  debian8 虽然命令显示可以，但没此用户目录，且不能登录
+
+ 删除用户 
+	# userdel  用户名  （执行了就不能再执行下一个带 -r ，用户已删除）	
+	# userdel -r  用户名 
+		-- 连同 /home下用户名目录一起删除
+  修改 usermod
+
+  ----------
+	组命令
+		groupadd ,groupmod,groupdel,密码 gpasswd
+4. sudo
+  赋予用户sudo权限，就是更改/etc/sudoers文件中的内容
+  此文件中如果没有该用户，就仿照root 添加一行，用户名换掉即可
+	-- 如果是 %..  说明是用户组，%userGroup， 此组中所有用户都可以使用sudo。
+ 添加时，如果后边跟上 NOPASSWD:ALL ，说明不需要输入密码
+ --  部分权限
+  %users ALL=/sbin/mount /mnt/cdrom, /sbin/umount  /mnt/cdrom
+  -- 用户组users，可以执行
+  $sudo mount /mnt/cdrom
+  $sudo umount /mnt/cdrom
+  其余权限被拒绝
+ 可以进行取反操作，表示禁止使用的命令
+  %users ALL=(ALL) ALL,!/usr/sbin/adduser,!usr/sbin/useradd
+
+5. sudo 有效时间5分钟（未查证）
+    每个命令前都需要sudo ，麻烦，su代替
+    sudo 输入自己的密码（？） su 输入root密码
+    su 切换原始用户，exit即可
+    su - 会切换到 /root 目录，不带 - 不切换
+    切换到root后，还可以继续使用此命令切换到其他用户
+    su user -  切换到user目录下，exit 退回root 再次退回原来用户
+	-- root 在debian8失败，
+		bash: 无法设定终端进程组(-1): 对设备不适当的 ioctl 操作
+		bash: 此 shell 中无任务控制
+
+    $sudo su - 
+	使用自己的密码就可以切换到root用户， 原理是 root 使用su不需要密码
+	应在/etc/sudoers中禁止su被sudo特权执行
+
+
+
+	

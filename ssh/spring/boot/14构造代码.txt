@@ -1,0 +1,42 @@
+14. 构建代码
+ 14.1 不使用 默认包，即无包名 default  (不同jar不同文件)
+	会导致 @ComponentScan, @EntityScan or @SpringBootApplication  出现问题
+ 14.2  Locating the main application class  
+	定位主应用类， 应在根包里边，最外层， root package above other classer.
+	
+	a. 主类上的 @EnableAutoConfiguration 会为特定元素定义基本的搜索包
+		如JPA项目，会经常用来搜索 @Entity
+	b. 使用根包，可以在使用 @ComponentScan 时不必指定 basePackage 属性，
+		并能使用 @SpringBootApplication
+
+	经典的布局
+		
+		com
+		 +- example
+		     +- myproject
+			 +- Application.java
+			 |
+			 +- domain
+			 |   +- Customer.java
+			 |   +- CustomerRepository.java
+			 |
+			 +- service
+			 |   +- CustomerService.java
+			 |
+			 +- web
+			     +- CustomerController.java
+
+	Application.java 可以仅使用 @Configuration 来声明一个主方法
+
+		----- code:
+			@Configuration
+			@EnableAutoConfiguration
+			@ComponentScan
+			public class Application {
+
+			    public static void main(String[] args) {
+				SpringApplication.run(Application.class, args);
+			    }
+
+			}
+		----------------------
