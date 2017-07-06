@@ -1,0 +1,46 @@
+20. Developer tools
+	Spring Boot包括一组额外的工具，可以使应用程序开发体验更加愉快。
+	该spring-boot-devtools模块可以包含在任何项目中，以提供额外的开发时间功能。要包含devtools支持，
+	只需将模块依赖关系添加到您的构建中：
+	-----------
+
+		<dependencies>
+		    <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional>
+		    </dependency>
+		</dependencies>
+
+--------------
+	行完全打包的应用程序时，开发人员工具将自动禁用。如果您的应用程序是使用java -jar
+	或启动使用特殊的类加载器，那么它被认为是“生产应用程序”。
+	将依赖关系标记为可选是一种最佳做法，可以防止使用项目将devtools传递性地应用于其他模块。
+
+	重新封装的存档默认情况下不包含devtools。如果要使用 某些远程devtools功能，
+	您需要禁用 excludeDevtoolsbuild属性才能包含它。该属性支持Maven和Gradle插件。
+
+20.1属性默认值
+	Spring Boots支持的几个库使用缓存来提高性能。例如，模板引擎 将缓存编译的模板，
+	以避免重复解析模板文件。
+	此外，Spring MVC可以在服务静态资源时向响应添加HTTP缓存头。
+
+	虽然缓存在生产中非常有利，但在开发过程中可能会产生反效果，
+	从而阻止您看到刚刚在应用程序中进行的更改。
+	因此，spring-boot-devtools将默认禁用这些缓存选项。
+
+	缓存选项通常由您的application.properties文件中的设置配置
+	For example, Thymeleaf offers the spring.thymeleaf.cache property. 
+
+	 开发时spring-boot-devtools会自动设置好这些配置，不需要手动设置
+
+20.2自动重启
+	使用的应用程序spring-boot-devtools会在类路径上的文件发生更改时自动重新启动。
+	这在IDE中工作时可能是一个有用的功能，因为它为代码更改提供了非常快的反馈循环。
+	默认情况下，将监视指向文件夹的类路径上的任何条目。请注意，
+	某些资源（如静态资源和视图模板）不需要重新启动应用程序。
+
+	触发重新启动的唯一方法是更新类路径
+
+	在Eclipse中，保存修改的文件将导致类路径被更新并触发重新启动。
+	在IntelliJ IDEA中，构建project（Build -> Make Project）将具有相同的效果。

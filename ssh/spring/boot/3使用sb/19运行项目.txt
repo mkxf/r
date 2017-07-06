@@ -1,0 +1,29 @@
+19. Running your application
+	建议使用嵌入式的HTTP服务器打包成jar包运行，调试也会很容易
+19.1 Running from an IDE 
+	导入项目再启动，多个端口冲突
+	 STS users can use the Relaunch button rather than Run to ensure that any existing instance is closed.
+
+19.2 Running as a packaged application	
+	$ java -jar target/myproject-0.0.1-SNAPSHOT.jar
+
+	远程调试  remote debugging support enabled
+	$ java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n \
+       -jar target/myproject-0.0.1-SNAPSHOT.jar
+
+19.3 Using the Maven plugin
+	$ mvn spring-boot:run
+	The Spring Boot Maven plugin includes a run goal which can be used to quickly compile and run your application.
+
+	设置环境变量
+	$ export MAVEN_OPTS=-Xmx1024m
+
+19.4 Using the Gradle plugin
+	$ gradle bootRun
+	includes a bootRun task 
+	设置环境变量
+	$ export JAVA_OPTS=-Xmx1024m
+
+19.5 Hot swapping   热插拔 ; 热交换
+	JVM hot swapping  有时被字节码限制  ，JRebel 能拿来使用
+	spring-boot-devtools 支持快速重启
