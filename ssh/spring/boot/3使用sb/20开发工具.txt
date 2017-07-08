@@ -34,7 +34,10 @@
 
 	 开发时spring-boot-devtools会自动设置好这些配置，不需要手动设置
 
-20.2自动重启
+20.2自动重启 
+	
+	根据监控类路径文件的变化自动重启
+
 	使用的应用程序spring-boot-devtools会在类路径上的文件发生更改时自动重新启动。
 	这在IDE中工作时可能是一个有用的功能，因为它为代码更改提供了非常快的反馈循环。
 	默认情况下，将监视指向文件夹的类路径上的任何条目。请注意，
@@ -44,3 +47,174 @@
 
 	在Eclipse中，保存修改的文件将导致类路径被更新并触发重新启动。
 	在IntelliJ IDEA中，构建project（Build -> Make Project）将具有相同的效果。
+
+20.2.3 Disabling restart  禁用自动重启
+	1. 设置  spring.dev tools.restart.enabled 属性
+
+	2. 完全关闭 代码中设置
+	--- 
+	public static void main(String[] args) {
+	    System.setProperty("spring.devtools.restart.enabled", "false");
+	    SpringApplication.run(MyApp.class, args);
+	}
+	----
+
+20.2.4 使用触发器文件 Using a trigger file
+
+	只有特定的文件修改才重启，可以通过
+	spring.devtools.restart.trigger-file 属性设置
+
+	可以全局设置，见 20.4 Global settings
+
+20.2.5 Customizing the restart classloader
+	配置重启的类加载器		-- cl
+
+-- 有时会出现一直加载的问题，就需要自定义指定cl
+
+	1. 重启功能是通过实现2个 类加载器实现的
+	2. IDE中打开的项目会通过 restart cl 加载
+	3. .jar 文件会通过 base cl 加载
+
+	可以通过创建一个 META-INF/spring-devtools.properties 文件指定
+	类加载器
+
+	restart.exclude.  开头的会被拉进  restart cl
+	restart.include.  则是  base cl
+
+	for example
+------------
+	restart.exclude.companycommonlibs=/mycorp-common-[\\w-]+\.jar
+	restart.include.projectcommon=/mycorp-myproj-[\\w-]+\.jar
+-------------
+	 要求1.key唯一 2. 以此开头 3. 符合正则表达式
+
+	 -- 所有的 classpath中的文件 META-INF/spring-devtools.properties
+	  都会被加载，可以打包进项目，或者lib中
+
+20.2.6 Known limitations
+	使用标准 ObjectInputStream 反序列化得到的对象，
+	是不会触发自动重启的
+	如果要发序列化数据，就需要使用spring的 ConfigurableObjectInputStream 
+	并结合 Thread.currentThread().getContextClassLoader() 使用
+
+	但 一些第三方库 反序列化 没有考虑到 上下文加载器 （ context classloader.），
+	可能会导致一些问题。
+
+20.3  实时刷新 LiveReload
+	
+	spring-boot-devtools 模块嵌入了一个实时刷新服务器，
+	当资源变化的时候，能够触发浏览器刷新
+
+	可以通过设置 spring.devtools.livereload.enabled  属性为 false 进行关闭
+	
+	一次只能启动一个 实时刷新服务器
+	如果IDE 中 启动多个项目，只有第一个能用 实时刷新
+
+	带 实时刷新 插件的 的浏览器有  Chrome, Firefox and Safari
+		-- from livereload.com.
+20.4 Global settings
+	 通过在 $HOME（指的是跟路径，以 . 开头） 文件夹中 添加 .spring-boot-devtools.properties 文件来进行全局设置
+	比如配置个触发器文件
+		~/.spring-boot-devtools.properties. 
+
+	spring.devtools.reload.trigger-file=.reloadtrigger
+
+
+
+
+20.5 Remote applications 远程应用
+	Spring Boot developer tools 支持远程项目
+
+生产中应禁止，有安全风险
+
+	1. maven中加入
+		------
+		<build>
+		    <plugins>
+			<plugin>
+			    <groupId>org.springframework.boot</groupId>
+			    <artifactId>spring-boot-maven-plugin</artifactId>
+			    <configuration>
+				<excludeDevtools>false</excludeDevtools>
+			    </configuration>
+			</plugin>
+		    </plugins>
+		</build>
+	------------
+	2. 设置  spring.devtools.remote.secret 
+	 -----------
+		spring.devtools.remote.secret=mysecret
+	 ----------
+
+Remote devtools 有2部分，1 服务器端 2. IDE所在的客户端
+	服务器端在 spring.devtools.remote.secret 设置后自动生效
+	客户端需要手动启动
+
+	20.5.1 Running the remote client application 
+		运行远程客户端应用
+			-- 运行在IDE内部的项目
+		需要运行 org.springframework.boot.devtools.RemoteSpringApplication
+		和远程项目使用相同的类路径 
+		remote URL  参数
+	
+		for example    eclipse
+
+		1.Select Run Configurations…​ from the Run menu.
+		2.Create a new Java Application “launch configuration”.
+		3.Browse for the my-app project.
+		4.Use org.springframework.boot.devtools.RemoteSpringApplication as the main class.
+		5.Add https://myapp.cfapps.io to the Program arguments (or whatever your remote URL is).
+	
+
+	远程客户端能够直接读取项目配置属性
+	建议使用https:// 进行连接
+	使用代理的话，需要设置 2个属性
+		spring.devtools.remote.proxy.port
+		spring.devtools.remote.proxy.host 
+
+20.5.2 Remote update 
+	远程客户端会监控项目类路径的变化，和本地自动重启方式一样
+	任何更新会都会推送到远程项目并触发重启
+
+	开发云服务的时候尤为有用，一般来说，远程更新并重启，比完全构建和发布要快很多。
+
+	远程客户端必须启动，监控才会有效，包括推送
+
+20.5.3 Remote debug tunnel
+	远程调试通道
+
+	诊断远程项目的时候，java 远程调试会很有用。
+	但在数据中心之外的项目，可能就不能，但如果是使用的容器，比如docker，远程有可能
+
+	帮助解决这些限制，devtools支持通过HTTP进行远程调试通信
+	远程客户端在端口8000上提供一个本地服务器，您可以将一个远程调试器附加到此
+
+	可以 spring.devtools.remote.debug.local-port 属性 设置端口
+
+	需要确定远程项目启动，并且开启远程调试，
+	可以通过 JAVA_OPTS 进行配置
+	例如：
+	Cloud Foundry 可以在 manifest.yml 中添加
+
+	-----------
+	---
+	    env:
+		JAVA_OPTS: "-Xdebug -Xrunjdwp:server=y,transport=dt_socket,suspend=n"
+
+	-------------------------------
+	
+	1. 不需要指定 -Xrunjdwp 的选项 address=NNNN ，java 会自动选择一个没用的端口
+	2. IDE 调试的时候，会有时间限制，远程容易超时
+	Java → Debug from Preferences…​ and change the Debugger timeout (ms)
+	to a more suitable value (60000 works well in most situations)
+	比 60000  大
+
+	IDEA 太麻烦，忽略
+	https://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#using-boot-devtools-remote-update
+
+
+21. Packaging your application for production
+	可执行的jar可用于生产部署。由于它们是独立的，它们也非常适合基于云的部署。
+
+	对于其他“生产就绪”功能，如健康，审计和度量REST或JMX端点; 
+	考虑加入spring-boot-actuator

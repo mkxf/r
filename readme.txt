@@ -6,3 +6,5 @@ what. where.why.how.要求(安装和软件).有什么限制.类似有哪些.使�
 
 列表简介，详细简介，新页面 展开，[功能实例],代码
 	页面添加，客户端展示
+
+	https://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#boot-features
