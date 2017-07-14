@@ -1,6 +1,8 @@
 
 https://www.kancloud.cn/kancloud/theory-of-mysql-index/41857
 
+http://yuri-liuyu.iteye.com/blog/979508  mysql 最左前缀
+
 
 Memory存储引擎可以选择Hash或BTree索引，
 Hash索引只能用于=或<=>的等式比较。 
