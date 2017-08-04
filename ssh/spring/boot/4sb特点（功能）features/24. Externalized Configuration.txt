@@ -115,17 +115,59 @@ and max is the maximum (exclusive).
 可以使用YAML（'.yml'）文件替代“.properties”。
 
 如果不喜欢application.properties配置文件名，
+
+
 可以通过指定spring.config.name环境属性来切换到另一个。
-还可以使用spring.config.location环境属性（目录位置的逗号分隔列表或文件路径）
-引用显式位置。
 
 $ java -jar myproject.jar --spring.config.name=myproject
 
-or
-
+还可以使用spring.config.location环境属性（目录位置的逗号分隔列表或文件路径）
+引用显式位置。
 $ java -jar myproject.jar --spring.config.location=classpath:/default.properties,classpath:/override.properties
 
 spring.config.name  和 spring.config.location  比较早的加载文件，
 这样可以确定环境属性，通常是 OS变量，系统属性，命令行参数
 
 
+	------
+如果 spring.config.location 是目录，则以/结尾，并加上 spring.config.name 的值，作为属性文件
+spring.config.location 中的文件不支持  特殊属性 变体，且会被特殊属性覆盖
+	Files specified in spring.config.location are used as-is, with no support for profile-specific variants, 
+	and will be overridden by any profile-specific properties.
+
+	// 特殊属性变体，大概是说 {} 这样的el表达式之类吧 
+
+
+--------- 配置地址属性会被覆盖，也就是使用优先级高的， 搜索到高的，就不用再搜索低的
+
+配置地址可以是多个，默认顺序是：classpath:/,classpath:/config/,file:./,file:./config/
+则搜索的时候，是倒着，也就是优化使用后边的值， 优先级是增加的
+
+如果子订单已的配置地址是  classpath:/custom-config/,file:./custom-config/  ，则优先使用自定义的，优先顺序增加
+
+搜索顺序：
+	-- 优先级依次降低
+file:./custom-config/
+classpath:custom-config/ 
+	-- 自定义结束
+file:./config/
+file:./
+classpath:/config/
+classpath:/
+
+默认属性配置，可以在 application.properties（或者 spring.config.name 指定的其他文件 ） 指定,
+这些属性会被自定义的属性覆盖
+	
+	使用环境变量而不是系统变量时，大多数操作系统不允许使用周期分隔的键名称，也就是.可以使用 下划线替换
+	如  SPRING_CONFIG_NAME 替换 spring.config.name
+
+	如果在容器中运行，可以使用 JNDI属性（在 java:comp/env 里边） 
+			     或者 servlet 初始化上下文参数，替换系统变量或者环境变量
+			
+
+
+-- end ： spring.config.location  + spring.config.name  可以指定自定的配置文件， 并且会进行属性覆盖
+	 优先级按照指定的顺序递增，高的覆盖低的。
+	 默认的顺序有（低 -> 高）  classpath:/,   classpath:/config/,   file:./,   file:./config/
+
+24.4配置文件特定的属性

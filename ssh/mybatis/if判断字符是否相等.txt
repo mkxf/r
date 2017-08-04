@@ -1,0 +1,26 @@
+http://cheng-xinwei.iteye.com/blog/2008200
+
+sql 组装 中，设置参数， 字符比较特殊，其余一样
+
+	字符需要外单内双
+
+1. 空值
+		<if test="userId != null and userId != '' ">
+			 AND t3.crt_user_id = #{userId}
+		 </if>
+	
+2 字符 
+
+	<if test='isOrder == "1"'>
+	 ORDER BY t3.crt_time DESC
+       </if>
+
+     外边改为 单 引号，双引号不行
+     这是因为 ，1 会被解析成字符，java 中字符和字符串是不相等的
+
+3 字符串  
+	外边还使用 双引号即可
+
+	<if test="isOrder == '11'">
+	   ORDER BY t3.crt_time DESC
+        </if>
