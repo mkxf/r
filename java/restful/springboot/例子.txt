@@ -1,0 +1,10 @@
+利用springboot创建一个rest服务 并测试
+	1.  利用 Jackson2  将对象转换为json， Jackson2在classpath中已添加
+	 -- 由于 Spring’s HTTP 消息转换支持，Spring 的  MappingJackson2HttpMessageConverter
+	  使用Jackson2 自动将对象转换为json
+	 2. spring4 中新增 @RestController ， =  @Controller + @ResponseBody 
+		将一个类转换为一个controller，每一个方法都能转换为一个域对象（a domain object）
+	3. @SpringBootApplication 包含这些注解
+		@Configuration 、 @EnableAutoConfiguration、 @EnableWebMvc、 @ComponentScan
+	
+	--- code 见2

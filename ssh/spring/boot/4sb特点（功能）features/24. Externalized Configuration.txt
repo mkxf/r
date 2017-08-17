@@ -170,4 +170,32 @@ classpath:/
 	 优先级按照指定的顺序递增，高的覆盖低的。
 	 默认的顺序有（低 -> 高）  classpath:/,   classpath:/config/,   file:./,   file:./config/
 
-24.4配置文件特定的属性
+24.4  Profile-specific properties 
+	特定配置文件中的属性
+	--  特定配置文件  指的是 
+		1  application.properties 
+		2  application-{profile}.properties ，默认 application-default.properties 
+		3.  由  spring.profiles.active属性 指定
+
+
+	除了 application.properties 文件，profile-specific properties 
+		还可以使用 application-{profile}.properties 命名约定 来定义。
+	
+	如果没有设置有效的配置文件，就会使用默认的，application-default.properties 将会被加载
+		 profile -> default
+		
+	Profile-specific properties  加载位置和 application.properties  相同，
+	 无论特定配置文件 （profile-specific files）在打包的jar内还是外，都会覆盖非特定文件 non-specific ones 
+
+	 如果指定了几个配置文件，则应用最后一个胜利策略。
+		例如，由spring.profiles.active属性指定的配置文件通过SpringApplicationAPI 配置后添加，因此优先。
+----
+     如果在 spring.config.location 有特定文件，这些特定文件变体不会被考虑，如果也想使用 特定文件属性，在spring.config.location 使用目录
+      
+      If you have specified any files in spring.config.location, profile-specific variants of those files will not be considered. Use directories in spring.config.location if you also want to also use profile-specific properties.
+
+      如果您指定了任何文件spring.config.location，则不会考虑这些文件的特定于配置文件的变体。spring.config.location如果您还想使用特定于配置文件的属性，请使用目录 。
+
+24.5  属性占位符   Placeholders in properties
+ 
+

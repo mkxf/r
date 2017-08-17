@@ -8,3 +8,26 @@ which is needed for the container to know the followings:
 	Bean's lifecycle details
 
 	Bean's dependencies
+----------------------
+1.  spring framework 介绍   IOC/DI  AOP
+	a 是一个轻量级解决方案，也是构建企业级应用潜在的一站式服务
+	b 模块化,允许只使用需要的部分
+	c 可以使用顶层的任何Web框架的IoC容器，也可以仅使用 Hibernate集成代码或JDBC抽象层
+	d 支持声明式事务管理
+	e 通过 RMI或web services 进行远程访问
+	f 持久存储数据的各种选项
+	g 提供了一个全功能的MVC框架，并透明地集成AOP
+	h 非侵入式，域逻辑代码通常不依赖于框架本身，在集成层（如数据访问层）中，将存在对数据访问技术和Spring库的一些依赖。
+		但是，应该很容易将这些依赖关系与您的代码库的其余部分隔离开来。
+
+The Spring Framework is a lightweight solution and a potential one-stop-shop 
+for building your enterprise-ready applications. However, Spring is modular,
+allowing you to use only those parts that you need, 
+without having to bring in the rest. 
+You can use the IoC container, with any web framework on top,
+but you can also use only the Hibernate integration code or the JDBC abstraction layer.
+The Spring Framework supports declarative transaction management,
+remote access to your logic through RMI or web services, and various options for persisting your data. 
+It offers a full-featured MVC framework, and enables you to integrate AOP transparently into your software.
+
+Spring is designed to be non-intrusive, meaning that your domain logic code generally has no dependencies on the framework itself. In your integration layer (such as the data access layer), some dependencies on the data access technology and the Spring libraries will exist. However, it should be easy to isolate these dependencies from the rest of your code base.

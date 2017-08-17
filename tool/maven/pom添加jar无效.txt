@@ -1,0 +1,55 @@
+pom 中添加一个jar引用后，update等都不起作用，可能是项目卡了，可以通过maven _> add Dependency 试下
+删除后再创建就可以
+
+通过maven模块创建的项目，包名比较多，不使用比较少，且多了个junit3的版本
+
+强制更新 maven -> update project 勾选
+
+1. eclipse 创建maven项目
+ 右键new -> maven project -> 选中第一个，next，填写 groupId， arcifact Id 即可，
+			--  arcifact Id 尽量不要带. ，上边pom添加的jar不进classpath可能就是因为这个
+
+2. 添加依赖 
+
+---------
+
+<dependencies>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>4.3.10.RELEASE</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/junit/junit -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
+
+-------------
+
+3.  编译版本
+
+	默认1.5
+
+ pom中添加进行修改
+ ----------------
+	<build>
+	 <plugins>
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-compiler-plugin</artifactId>
+			<version>3.6.1</version>
+			<configuration>
+				<source>1.8</source>
+				<target>1.8</target>
+				<encoding>UTF-8</encoding>
+			</configuration>
+		</plugin>
+	</plugins>
+	</build>
+----------------------------
