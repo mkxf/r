@@ -41,9 +41,33 @@ VirtualBox通过Host-Only来实现主机与虚拟机之间的互相访问
 	#IP should be same with the ip of Virtualbox host-only interface
 	auto eth1
 	iface eth1 inet static
-	   address 192.168.56.101 
+	   address 192.168.56.10
 	   netmask 255.255.255.0
 	   gateway 192.168.56.1
+
+	   --------
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+source /etc/network/interfaces.d/*
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+auto eth0
+allow-hotplug eth0
+iface eth0 inet dhcp
+
+#IP should be same with the ip of Virtualbox host-only interface
+auto eth1
+iface eth1 inet static
+   address 192.168.1.11
+   netmask 255.255.255.0
+   gateway 192.168.1.1
+
+
+---------------------
 
 4. 配置完成之后，使用 service networking restart 重启网络，让配置生效。
 

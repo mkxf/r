@@ -13,7 +13,8 @@ InnoDB是事务型引擎，支持回滚、崩溃恢复能力、多版本并发�
   ● InnoDB表比MyISAM表更安全，可以在保证数据不会丢失的情况下，切换非事务表到事务表（alter table tablename type=innodb）。
 应用场景：
   ● MyISAM管理非事务表。它提供高速存储和检索，以及全文搜索能力。如果应用中需要执行大量的SELECT查询，那么MyISAM是更好的选择。
-  ● InnoDB用于事务处理应用程序，具有众多特性，包括ACID事务支持。如果应用中需要执行大量的INSERT或UPDATE操作，则应该使用InnoDB，这样可以提高多用户并发操作的性能。
+  ● InnoDB用于事务处理应用程序，具有众多特性，包括ACID事务支持。如果应用中需要执行大量的INSERT或UPDATE操作，则应该使用InnoDB，
+  这样可以提高多用户并发操作的性能。
 常用命令：
 　　（1）查看表的存储类型（三种）：
   ● show create table tablename

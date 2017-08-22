@@ -197,5 +197,168 @@ classpath:/
       如果您指定了任何文件spring.config.location，则不会考虑这些文件的特定于配置文件的变体。spring.config.location如果您还想使用特定于配置文件的属性，请使用目录 。
 
 24.5  属性占位符   Placeholders in properties
- 
+	application.properties 中的值能够被过滤，被环境中已定义的值替换 （比如 系统属性）
+	------
+	app.name=MyApp
+	app.description=${app.name} is a Spring Boot application
+	-----
+
+24.6 使用 YAML  替换属性
+	YAML 是 JSON 的一种超集，配置分层数据 很方便。
+	只要classpath中有 SnakeYAML  包， SpringApplication 就支持 YAML
+	  
+	  spring-boot-starter 自动提供 SnakeYAML
+
+ 24.6.1 Loading YAML  
+	Spring Framework 提供2个类加载 YAML 文档
+		YamlPropertiesFactoryBean  会当成 Properties  加载，
+		YamlMapFactoryBean   会加载成 Map
+
+		-----
+		environments:
+		    dev:
+			url: http://dev.bar.com
+			name: Developer Setup
+		    prod:
+			url: http://foo.bar.com
+			name: My Cool App 
+
+		  -----------------
+
+		会转化为这些属性  ->
+
+		  ------
+		   environments.dev.url=http://dev.bar.com
+		   environments.dev.name=Developer Setup
+		   environments.prod.url=http://foo.bar.com
+		   environments.prod.name=My Cool App
+		  ---------------
+
+	YAML lists 会通过属性key的 [index] 引用
+	------
+	my:
+	   servers:
+	       - dev.bar.com
+	       - foo.bar.com
+
+	-------
+
+	->
+
+	-------------
+	my.servers[0]=dev.bar.com
+	my.servers[1]=foo.bar.com
+	--------------
+	 使用 spring DataBinder 工具 （ @ConfigurationProperties 提供的有 ）
+	 可以把YAML的值绑定到属性上，这个属性的目标bean的 一个list或者set，
+	  并且不需要提供 setter 或者 初始化 方法
+	  如:
+
+	-------------
+
+	@ConfigurationProperties(prefix="my")
+	public class Config {
+
+	    private List<String> servers = new ArrayList<String>();
+
+	    public List<String> getServers() {
+		return this.servers;
+	    }
+	}
+
+	--------------
+	多处定义出现值覆盖时，不会覆盖列表，只会覆盖单值，
+	可以通过 YAML 中的多值 改为单值， 让 PropertySource 有更高的优先级 从而进行覆盖
+	如
+
+	my:
+	   servers:
+	       - dev.bar.com
+	       - foo.bar.com
+
+       改为：
+       
+	my:
+	 servers: dev.bar.com,foo.bar.com
+
+
+24.6.2 将YAML作为Spring环境中的属性
+	在spring 环境中 YamlPropertySourceLoader 能把 YAML 当做一个 PropertySource 
+	这样可以使用 @Value 注解，使用占位符语法来接受 YAML 属性
+
+24.6.3  Multi-profile YAML documents  多属性的YAML文档
+	通过使用 spring.profiles 来区分多个属性文件的 YAML 文档
+
+------------
+	server:
+	    address: 192.168.1.100
+	---
+	spring:
+	    profiles: development
+	server:
+	    address: 127.0.0.1
+	---
+	spring:
+	    profiles: production
+	server:
+	    address: 192.168.1.120
+----------------
+     如果 development profile 是活动状态，server.address 就会使用 127.0.0.1，、
+     如果  development and production 都没有激活，则使用 192.168.1.100
+
+     如果都没有激活，则使用默认值
+      
+      ---------
+       server:
+	  port: 8000
+	---
+	spring:
+	  profiles: default
+	security:
+	  user:
+	    password: weak
+       ----------
+
+      Spring profiles  支持使用 ! 否定符号，如果在一个文件里 同时有 否定和非否定，
+      至少一个 非否定 属性文件匹配，可以没有否定文件
+
+  24.6.4 YAML的缺点
+    不能通过  @PropertySource  注解加载 YMAL 文件
+
+  24.6.5 合并YAML列表
+	  不会合并，如何此情况下没有设置某个值，则为null
+	  如：
+	  --------
+
+	  @ConfigurationProperties("foo")
+	public class FooProperties {
+
+	    private final List<MyPojo> list = new ArrayList<>();
+
+	    public List<MyPojo> getList() {
+		return this.list;
+	    }
+
+	}
+	----------
+	YAML:
+
+	---------
+	foo:
+	  list:
+	    - name: my name
+	      description: my description
+	---
+	spring:
+	  profiles: dev
+	foo:
+	  list:
+	    - name: my another name
+	--------
+	如果是 dev 环境，则  description 属性的值为null ，而不是 上边的值
+
+24.7 Type-safe Configuration Properties
+
+
+
 

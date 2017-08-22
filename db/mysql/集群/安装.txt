@@ -1,0 +1,36 @@
+1. debian 8  32 下载 mysql-cluster-gpl-7.4.16-debian8-i686.deb
+
+https://dev.mysql.com/downloads/cluster/   选择对应的版本
+
+	GA 是来说明release版本的 最终版本，稳定版本  发行版本
+	RC：(Release　Candidate)  发行候选版本
+	alpha  内测
+	beat 公测
+	Alpha测试主要看有没有功能缺失或系统错误，Alpha测试完后一般不会有大问题了，然后把软件拿给用户测试，称为：beta测试
+
+2. copy 到linux 里  /dev/mysql/install
+3. 在此目录下打开终端
+	root@debian:/opt/mysql/install# dpkg -i mysql-cluster-gpl-7.4.16-debian8-i686.deb
+	正在选中未选择的软件包 mysql。
+	(正在读取数据库 ... 系统当前共安装有 113740 个文件和目录。)
+	正准备解包 mysql-cluster-gpl-7.4.16-debian8-i686.deb  ...
+	正在解包 mysql (5.6.37) ...
+	正在设置 mysql (5.6.37) ...
+	root@debian:/opt/mysql/install# 
+
+4. 结束后 install 同级多一个  server-5.6 目录 ， install删除了即可
+开始参考  https://downloads.mysql.com/tutorials/cluster/mysql_wp_cluster_quickstart.pdf
+5.
+	root@debian:/opt/mysql/server-5.6# bin/ndb_setup.py
+	Running out of install dir: /opt/mysql/server-5.6/bin
+	Starting web server on port 8081
+	deathkey=975369
+	The application should now be running in your browser.
+	(Alternatively you can navigate to http://localhost:8081/welcome.html to start it)
+
+6. 自动打开浏览器
+ 选择  创建新的mysql集群
+
+host list: 192.168.0.111
+userNam： mysqlC    x
+	

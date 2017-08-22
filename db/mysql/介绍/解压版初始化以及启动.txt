@@ -6,7 +6,8 @@ mysql-5.7.14-winx64是Windows 64位免配置安装版本
 2、进入该目录，找到my-defualt.ini，在my-defualt.ini旁边新增一个my.ini文件，
 （最简单方式是复制my-default.ini改名为my.ini）.ini文件是window里面的配置文件
  改2个地方，一个是路径，一个是编码
- 服务端使用的字符集默认为8比特编码的latin1字符集，MySQL 5.5 开始 default-character-set 这个配置就不用了，要改名为 character-set-server
+ 服务端使用的字符集默认为8比特编码的latin1字符集，MySQL 5.5 开始 default-character-set 这个配置就不用了，
+ 要改名为 character-set-server
 character-set-server=utf8
 
 3、以管理员身份运行cmd.exe  一定要管理员身份运行
