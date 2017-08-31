@@ -357,7 +357,10 @@ classpath:/
 	--------
 	如果是 dev 环境，则  description 属性的值为null ，而不是 上边的值
 
-24.7 Type-safe Configuration Properties
+24.7 Type-safe Configuration Properties  类型安全配置属性
+	使用 @Value("${property}") 注入属性有时候比较麻烦/笨重，尤其是多个属性或者具有层级关系的数据
+	对于这样的属性，sb 提供另一种方法，允许强类型的bean来管理和验证应用程序的配置。
+
 
 
 

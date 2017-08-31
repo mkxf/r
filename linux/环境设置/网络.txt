@@ -1,20 +1,44 @@
-虚拟机网络
 
-NAT模式
-	只能单向访问，虚拟机可以通过网络访问到主机，
-	主机无法通过网络访问到虚拟机。
+可以更改IP， 主机能访问虚拟机，虚拟机可以相互访问，虚拟机访问不了外网
+set：
+1. 虚拟机选择 host-only 网络，全部允许
+2. 进入后设置静态ip
+	---
+	# This file describes the network interfaces available on your system
+	# and how to activate them. For more information, see interfaces(5).
 
- Bridged Adapter模式（桥接模式）
+	source /etc/network/interfaces.d/*
 
-	虚拟机与主机关系： 可以相互访问，
-	因为虚拟机在真实网络段中有独立IP，
-	主机与虚拟机处于同一网络段中，彼此可以通过各自IP相互访问。
+	# The loopback network interface
+	auto lo
+	iface lo inet loopback
 
-Host-only Adapter模式
-	默认不能相互访问，双方不属于同一IP段
-	  在主机无法上网的情况下（主机可以上网的情况下可以用host-only，也可以用桥接），需要搭建一个模拟局域网，所有机器可以互访
+	#auto eth1
+	#allow-hotplug eth1
+	#iface eth1 inet dhcp
 
-   但更改后可以
+	#IP should be same with the ip of Virtualbox host-only interface
+	auto eth0
+	iface eth0 inet static
+	   address 192.168.56.12
+	   netmask 255.255.255.0
+	   gateway 192.168.56.1
+
+	---
+ 主要是下边的 静态IP，  eth1 的 dhch 是动态获取
+  静态IP 必须是56 段，应该是虚拟机自动设置的
+
+  ----------------
+
+  虚拟机访问外网
+  网卡1 设置NAT （第一个），网卡2 设置host-only
+  再用上边的设置，但IP 只能是102，设置其他没用,并且是ech1的 ，ech0 是自动获取 dhcp
+ ------------------
+ 修改ip命令
+# vi /etc/network/interfaces 
+# service networking restart
+----------------------
+
 
   ------------
 
@@ -46,6 +70,15 @@ VirtualBox通过Host-Only来实现主机与虚拟机之间的互相访问
 	   gateway 192.168.56.1
 
 	   --------
+
+	  vi  /etc/network/interfaces 
+	   service networking restart
+
+
+	   --- 3   net 1 host-only  net 2 first NAT
+		-- 不能访问外网， 主机可以访问，并且3是2个ip，都能ping到
+		 102，104
+	   -----------------------------------------
 # This file describes the network interfaces available on your system
 # and how to activate them. For more information, see interfaces(5).
 
@@ -62,13 +95,32 @@ iface eth0 inet dhcp
 #IP should be same with the ip of Virtualbox host-only interface
 auto eth1
 iface eth1 inet static
-   address 192.168.1.11
+   address 192.168.56.102
    netmask 255.255.255.0
-   gateway 192.168.1.1
+   gateway 192.168.56.1
+
 
 
 ---------------------
 
 4. 配置完成之后，使用 service networking restart 重启网络，让配置生效。
 
-5. 通过互Ping主机和虚拟机，大功告成，同时虚拟机也可以上网了
+
+------------
+NAT模式是最简单的实现虚拟机上网的方式，你可以这样理解：Vhost访问网络的所有数据都是由主机提供的，
+vhost并不真实存在于网络中，主机与网络中的任何机器都不能查看和访问到Vhost的存在。
+
+网卡桥接（Bridged Adapter模式），是最常用的网格配置方案。它通过在网的主机网卡将虚拟机客户端桥接到网络中。
+虚拟机客户端能够分配到一个网络中的独立IP，实现与网络中的其他实体计算机一样的网络功能。
+
+ 仅主机（Host-Only）适配器（主机模式），是一种比较复杂的模式。它通过Vbox在主机中的虚拟网卡（VirtualBox Host-Only Network ）
+ 实现主机与虚拟机客户端互相访问。适用于会议、演示等没有网络环境的场合使用。
+
+
+（二）修改DNS
+1 编辑文件
+nano /etc/resolv.conf
+2 添加DNS
+nameserver XX.XX.XX.XX
+
+

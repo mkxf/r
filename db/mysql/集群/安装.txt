@@ -1,3 +1,4 @@
+------ 没成功-------
 1. debian 8  32 下载 mysql-cluster-gpl-7.4.16-debian8-i686.deb
 
 https://dev.mysql.com/downloads/cluster/   选择对应的版本
