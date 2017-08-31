@@ -1,2 +1,0 @@
-var  json	 =  	JSON.parse("");  // 字符串转json
-var  "" 	 = 	JSON.stringify(json);  // json转字符串

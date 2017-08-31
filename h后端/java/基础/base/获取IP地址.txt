@@ -1,1 +1,0 @@
-	String ip = InetAddress.getLocalHost().getHostAddress().toString(); // 获取服务器IP地址

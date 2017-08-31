@@ -1,5 +1,0 @@
-// Disable #x
-$( "#x" ).prop( "disabled", true );
- 
-// Enable #x
-$( "#x" ).prop( "disabled", false );

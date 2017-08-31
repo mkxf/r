@@ -1,4 +1,0 @@
-CAP:  一个分布式系统不可能同时满足CAP这3个基本需求，最多只能同时满足其中两项
-	C:Consistency 一致性
-	A:Availability 可用性
-	P:Partition tolerance 分区容错性

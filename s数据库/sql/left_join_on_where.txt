@@ -1,5 +1,0 @@
-on and 中的and  只对限制表起作用
-where 对整个结果集起作用
-
-A left join B on a.id = b.id and a.name = 'x' 
-	-- a.name = 'x'  限制无效
