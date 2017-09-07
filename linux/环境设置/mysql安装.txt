@@ -1,0 +1,63 @@
+ubuntu16 安装 mysql5.17
+
+1. 安装 ubuntu16 64 位
+   开机时按f2，bios 里开启虚拟， oracle VirtualBox 选择系统，会出现64位
+2. 应该动态分配就行，固定大小划分时间太长
+3. 分区默认就可以
+4.安装mysql
+  
+   首先检查系统中是否已经安装了MySQL
+   sudo netstat -tap | grep mysql
+   安装MySQL.
+   sudo apt-get install mysql-server mysql-client
+
+   登录
+   mysql -uroot -p   接下来会提示你输入密码，输入正确密码
+   
+5. 远程登录修改
+ 1.  登录mysql
+   执行
+   grant all privileges on *.* to 'root'@'%' identified by 'mysql密码';
+
+   > grant all privileges on *.* to 'root'@'%' identified by 'root';
+   > flush privileges;/*刷新授权，不然授权在MySQL重启前不生效，执行这条指令后，即刻生效*/
+
+2. 退出mysql
+  > exit;
+
+    修改 my.cnf 文件：  
+
+	sudo vi /etc/mysql/my.cnf
+
+	bind-address = 127.0.0.1 //找到此内容并且注释
+
+
+开放防火墙端口 (看情况)
+
+单独开放3306端口
+
+sudo ufw allow 3306
+
+
+5. 关闭、启动
+   sudo service mysql stop
+   sudo service mysql start;
+
+查看状态
+   sudo service mysql status
+
+   -------------------
+
+   mysql简单命令
+sudo service mysql status    //查mysql的状态 
+sudo service mysql start     //启动mysql服务
+sudo service mysql stop　　  //关闭mysql服务
+select version()　　　　　　  //查看mysql版本
+mysql -u root -p 　　　　　　 //root用户登录
+show databases　　　　　　　　//查看当前数据库
+use database_name　　　　　　 //选择某一个数据库
+show tables　　　　　　　　　　//查看数据库中的表单
+show columns from table_name //查看表结构
+exit;　　　　　　　　　　　　　//退出mysql
+
+-----------------

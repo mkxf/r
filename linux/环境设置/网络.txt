@@ -1,4 +1,12 @@
 
+ 修改ip命令
+  -- gedit /etc/network/interfaces    -- ubuntu
+ vi /etc/network/interfaces 
+ 
+ service networking restart
+
+--------------
+
 可以更改IP， 主机能访问虚拟机，虚拟机可以相互访问，虚拟机访问不了外网
 set：
 1. 虚拟机选择 host-only 网络，全部允许
@@ -34,10 +42,18 @@ set：
   网卡1 设置NAT （第一个），网卡2 设置host-only
   再用上边的设置，但IP 只能是102，设置其他没用,并且是ech1的 ，ech0 是自动获取 dhcp
  ------------------
- 修改ip命令
-# vi /etc/network/interfaces 
-# service networking restart
+
 ----------------------
+
+   auto lo   
+   iface lo inet loopback   
+   auto eth1   
+   iface eth1 inet static   
+   address 192.168.56.13   
+   netmask 255.255.255.0   
+   network 192.168.0.0   
+   broadcask 192.168.0.255   
+   gateway 192.168.56.1
 
 
   ------------
@@ -65,7 +81,7 @@ VirtualBox通过Host-Only来实现主机与虚拟机之间的互相访问
 	#IP should be same with the ip of Virtualbox host-only interface
 	auto eth1
 	iface eth1 inet static
-	   address 192.168.56.10
+	   address 192.168.56.13
 	   netmask 255.255.255.0
 	   gateway 192.168.56.1
 
@@ -104,7 +120,7 @@ iface eth1 inet static
 ---------------------
 
 4. 配置完成之后，使用 service networking restart 重启网络，让配置生效。
-
+	可能不生效，需要重启主机（应该是重启主机的虚拟网卡）
 
 ------------
 NAT模式是最简单的实现虚拟机上网的方式，你可以这样理解：Vhost访问网络的所有数据都是由主机提供的，
@@ -119,8 +135,12 @@ vhost并不真实存在于网络中，主机与网络中的任何机器都不能
 
 （二）修改DNS
 1 编辑文件
-nano /etc/resolv.conf
+vi /etc/resolv.conf
 2 添加DNS
 nameserver XX.XX.XX.XX
+
+
+nameserver 211.138.24.66
+nameserver 211.138.30.66
 
 

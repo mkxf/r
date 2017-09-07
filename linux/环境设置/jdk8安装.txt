@@ -74,3 +74,31 @@ javac 1.8.0_131
 root@debian:~# vi /etc/profile
  root@debian:~# java -version
 java version "1.8.0_131"
+
+
+----------------
+解压，然后配置
+
+1. tar -zxf jdk-8u131-linux-i586.tar.gz
+
+2. vi /etc/profile
+
+-- gedit /etc/profile    更简单
+
+3. source /etc/profile
+
+---------
+
+4. 验证
+  java -version
+
+  -- java -verbose
+
+--------------
+#set Java environment
+export JAVA_HOME=/usr/soft/jdk/jdk1.8.0_144
+export JRE_HOME=$JAVA_HOME/jre
+export CLASSPATH=.:$JAVA_HOME/lib:$JRE_HOME/lib:$CLASSPATH
+export PATH=$JAVA_HOME/bin:$JRE_HOME/bin:$PATH
+
+------------

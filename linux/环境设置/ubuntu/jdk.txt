@@ -1,0 +1,11 @@
+sudo add-apt-repository ppa:webupd8team/java
+
+sudo apt update;
+
+sudo apt install oracle-java8-installer
+
+java -version
+java version "1.8.0_144"
+
+root@mk-VirtualBox:~# whereis java
+java: /usr/bin/java /usr/share/java /usr/share/man/man1/java.1.gz
