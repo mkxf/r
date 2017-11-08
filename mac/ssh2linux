@@ -1,0 +1,14 @@
+ssh -t root@12.23.34.45 -p 22
+ssh -t 用户名@IP地址 -p 端口
+
+windows下 除了xshell，我还会用xftp。
+在os x下 可以用cyberduck 代替xftp
+
+win2linux
+
+标题	        用户名	  密码	         
+192.168.100.4	zyzx	 Uo_b_mG3     
+	 
+192.168.100.5	zyzx	A/*4meIZ^'       
+	 
+192.168.100.6	zyzx	\;BkapS/3s  

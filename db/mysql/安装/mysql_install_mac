@@ -1,0 +1,36 @@
+下载 dmp 文件，安装后，会在系统偏好设置 中出现mysql，安装过程，出现的密码，记录下来
+
+安装好，可以启动，但需要设置环境变量，或者设置别名
+
+You might want to add aliases to your shell's resource file to make it easier to access commonly used programs such as mysql and mysqladmin from the command line. The syntax for bash is:
+
+alias mysql=/usr/local/mysql/bin/mysql
+alias mysqladmin=/usr/local/mysql/bin/mysqladmin
+For tcsh, use:
+
+alias mysql /usr/local/mysql/bin/mysql
+alias mysqladmin /usr/local/mysql/bin/mysqladmin
+Even better, add /usr/local/mysql/bin to your PATH environment variable
+
+------------
+ 设置环境变量：
+
+ sudo vim ~/.bash_profile
+
+ 在 .bash_profile 文件中添加下面文本
+
+export PATH=${PATH}:/usr/local/mysql/bin 
+
+让 .bash_profile 配置文件立即生效：
+
+source ~/.bash_profile
+
+然后登录 mysql 可以
+
+mysql -uroot -p
+
+登录后可以修改密码
+
+SET PASSWORD FOR 'root'@'localhost' = PASSWORD('newpass');
+
+原来是 root  改为 r

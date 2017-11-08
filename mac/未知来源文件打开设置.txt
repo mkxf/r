@@ -1,0 +1,5 @@
+关闭安全里的 可以打开所有来源 文件
+命令行：
+sudo spctl --master-enable
+打开
+sudo spctl --master-disable

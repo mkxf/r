@@ -1,0 +1,86 @@
+
+mac 登录时，localhost和127都可以，但ip不行，新增 dir../etc/my.cnf,
+下边没有ip绑定，没有发现其他原因（网上情况没有）
+
+https://stackoverflow.com/questions/1559955/host-xxx-xx-xxx-xxx-is-not-allowed-to-connect-to-this-mysql-server
+
+提到可能是安全问题，禁止root远程访问，新建个用户，分配所有权限可以 
+（linux下没有此情况）
+
+1. create user 'rmroot'@'%' identified by 'rm';
+2. grant all privileges on *.* to 'rmroot'@'%' with grant option;
+3. flush privileges;
+
+测试可以
+mk$ mysql -h192.168.56.1 -urmroot -p
+
+——————
+连接数据库 带 -A ，
+
+登录后的第一个“使用”命令，MySQL扫描数据库，表和列的名称，以自动完成。
+如果你有很多数据库、表可能需要一段时间。
+
+为了避免这种情况，请使用-A选项（或--no-auto-rehash）启动客户端
+mysql> use my_database_name;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+-----------------------------
+MYSQL 编码 和引擎设置
+
+默认设置 
+vi /etc/mysql/mysql.conf.d/mysqld.cnf
+---------------
+[mysqld]
+collation-server = utf8_unicode_ci
+init-connect='SET NAMES utf8'
+character-set-server = utf8
+
+default-storage-engine=MyISAM
+default-tmp-storage-engine=MyISAM
+internal_tmp_disk_storage_engine=MyISAM
+ --  innodb=OFF 最好不要，和 skip-innodb  都是过时的，5.7禁用
+-------------------
+从库为 MyISAM ， 主库为 INNODB
+
+
+
+------------
+查看mysql现在已提供什么存储引擎:
+mysql> show engines;
+
+查看mysql当前默认的存储引擎:
+mysql>show variables like '%storage_engine%';
+修改表的存储引擎：
+ALTER TABLE engineTest ENGINE = INNODB；
+数据库一样
+-----------------
+
+检查默认安装的mysql的字符集
+mysql> show variables like '%char%';
+
+vi /etc/mysql/mysql.conf.d/mysqld.cnf
+---------
+collation-server = utf8_unicode_ci
+init-connect='SET NAMES utf8'
+character-set-server = utf8
+-----------
+service  mysql restart
+
+
+如果改之前表里已经有数据，也需要更改此列
+可以通过建表语句来看
+
+show create table t_user;
+
+-- 改了表，如果有数据，需要再改列，没数据不确定，通过上边语句确定。
+
+alter table t_user character set utf8;
+
+确定是否某列上的编码有特殊情况
+更改此列
+
+alter table t_user modify name varchar(20) character set utf8;
+
+再插入中文即可，之前会报错：
+ERROR 1366 (HY000): Incorrect string value

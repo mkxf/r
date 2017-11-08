@@ -1,0 +1,227 @@
+1. mastert 配置
+ shut down the MySQL server and edit the my.cnf or my.ini file
+
+ [mysqld]
+log-bin=mysql-bin
+server-id=1
+
+server-id 唯一，在 1 - 2的32次方-1 之间
+
+#//
+应该使用默认的 0.0.0.0，不限制， 如果改成ip，则会登录时被限制，127也会失败
+—————
+绑定的ip改成本机的，不使用127.
+vi /etc/mysql/mysql.conf.d/mysqld.cnf
+然后重启
+———————
+2. Creating a User for Replication
+	 granted the REPLICATION SLAVE privilege
+	  -- You can choose to create a different account for each slave, 
+	  	or connect to the master using the same account for each slave
+
+%.mydomain.com 为 任何来自 mydomain.com 域的主机
+
+
+	  	mysql> CREATE USER 'repl'@'%.mydomain.com' IDENTIFIED BY 'slavepass';
+		mysql> GRANT REPLICATION SLAVE ON *.* TO 'repl'@'%.mydomain.com';
+
+CREATE USER 'repl'@'192.168.56.%' IDENTIFIED BY 'repl';
+GRANT REPLICATION SLAVE ON *.* TO 'repl'@'192.168.56.%';
+
+flush privileges;
+
+从库测试此用户
+
+root@debian9:~# mysql -h 192.168.56.20 -urepl -prepl
+
+主库上不行
+
+3. 3 Obtaining the Replication Master Binary Log Coordinates
+	从主机获取日志文件
+
+	如果主机已经有日志，使用下边命令同步
+	FLUSH TABLES WITH READ LOCK;
+		-- 此客户端不关（应该是命令窗口），锁一直有效，离开则释放
+
+	master新打开个会话，确定当前日志名字和位置
+
+	mysql > SHOW MASTER STATUS;
++------------------+----------+--------------+------------------+
+| File             | Position | Binlog_Do_DB | Binlog_Ignore_DB |
++------------------+----------+--------------+------------------+
+| mysql-bin.000003 | 73       | test         | manual,mysql     |
++------------------+----------+--------------+------------------+
+	
+	记下 file 和 position，从库更新从这个开始
+	本地：
+	mysql-bin.000001  
+	617
+
+	复制分2种情况
+	1. 复制前，主库已有数据，这时要锁住从库，就上边的读锁，然后直接copy数据到从库
+	https://dev.mysql.com/doc/refman/5.7/en/replication-snapshot-method.html
+
+	2.没有，主从库都是新的，可以释放锁，直接开始
+
+	直接第二种
+	首先确定：
+	 1. 配置主库必要的信息
+	 2. 获取主库状态信息
+	 3. 在主库上 释放 锁
+	 	mysql> UNLOCK TABLES;
+	 配置从库
+	 	要求每个从库 server ID 唯一， 不配置server-id 连接不上主库
+
+	 	vi /etc/mysql/mysql.conf.d/mysqld.cnf
+
+	 	配置 重启
+	 		[mysqld]
+			server-id=21
+			# 表名不区分大小写
+			lower_case_table_names=1
+
+	连接到主库
+	从库执行：
+		mysql> CHANGE MASTER TO
+    ->     MASTER_HOST='master_host_name',
+    ->     MASTER_USER='replication_user_name',
+    ->     MASTER_PASSWORD='replication_password',
+    ->     MASTER_LOG_FILE='recorded_log_file_name',
+    ->     MASTER_LOG_POS=recorded_log_position;
+
+
+CHANGE MASTER TO
+MASTER_HOST='192.168.56.20',
+MASTER_USER='repl',
+MASTER_PASSWORD='repl',
+MASTER_LOG_FILE='mysql-bin.000001',
+MASTER_LOG_POS=617;
+
+4.  启动从库线程 从库执行
+	mysql> START SLAVE;
+
+在从库检查状态
+mysql> SHOW SLAVE STATUS\G
+
+
+-- 复制技术不能使用  Unix socket files ,需要 TCP/IP 连接到主库的mysql
+ 也可以使用SSL 进行安全复制 
+ https://dev.mysql.com/doc/refman/5.7/en/change-master-to.html
+
+ 16.1.2.5.3 Setting Up Replication between a New Master and Slaves
+
+在新的主库和从库配置复制
+1. 启动mysql从库并连接上
+2. 执行  CHANGE MASTER TO 语句，设置要复制的主库设置，具体设置见上边
+  ----------
+   如果主库 加载了dump文件，从库会自动复制，
+   主库加载方式为
+   shell> mysql -h master < fulldb.dump
+
+  ----------
+  复制前已经有数据，把主库的快照传给从库
+  如果使用的是 mysqldump：
+  1. 使用  --skip-slave-start  选项启动从库，只要复制不会启动
+  2. 导入dump文件
+    shell> mysql < fulldb.dump
+
+    如果使用的是数据文件 raw data files
+   1. 解压数据到从库的数据文件夹下
+    shell> tar xvf dbdump.tar
+    可能需要确定从库有权限读写，修改这些文件的权限和所有者
+    You may need to set permissions and ownership on the files so that the slave server can access and modify them.
+    2. 启动从库 使用 --skip-slave-start  选项
+    3. 配置主从复制的信息，见 CHANGE MASTER TO
+    4. 启动线程
+    	mysql> START SLAVE;
+
+
+------------
+ 添加新的从库到 主从复制环境中
+
+ 不用停止主库，可以copy一个已存在的从库，来设置成新的从库。server-id 要不同
+ 1. 关闭这个已存在的从库 （确定2个库都是关闭状态）
+ shell> mysqladmin shutdown
+ 2. copy 数据目录到新的从库，确定包含 the log files and relay log files.
+
+ --relay-log  使用和原来相同的值，避免出现问题
+ 3. 复制主库信息和中继日志 
+ 	Copy the master info and relay log info repositories from 
+ 	the existing slave to the new slave. These hold the current log 
+ 	coordinates for the master's binary log and the slave's relay log
+ 4. 启动已存在的从库 （被复制的那个）
+ 5. 配置新从库，设置新的 server-id 
+ 	edit the configuration and give the new slave a unique server-id
+ 6.启动新从库
+ ------------------
+
+ =========================
+
+ 操作步骤：
+ 1. 主库配置文件，改完重启
+ vi /etc/mysql/mysql.conf.d/mysqld.cnf
+
+  [mysqld]
+log-bin=mysql-bin
+server-id=1
+
+绑定ip更改为本机，不使用127
+  		-- 影响未定
+
+  2. 创建用户并授权
+
+  	CREATE USER 'repl'@'192.168.56.%' IDENTIFIED BY 'repl';
+	GRANT REPLICATION SLAVE ON *.* TO 'repl'@'192.168.56.%';
+
+	flush privileges;
+
+		从库测试此用户
+
+		root@debian9:~# mysql -h 192.168.56.20 -urepl -prepl
+
+ 3. 锁定主库并取状态
+  FLUSH TABLES WITH READ LOCK;
+
+  SHOW MASTER STATUS;
+
+  记下 前2个
+
+  然后释放锁
+  mysql> UNLOCK TABLES;
+
+  4. 处理从库
+     设置  改完重启
+  [mysqld]
+	log-bin=mysql-bin
+	server-id=1
+
+5.  设置连接
+
+
+CHANGE MASTER TO
+MASTER_HOST='192.168.56.20',
+MASTER_USER='repl',
+MASTER_PASSWORD='repl',
+MASTER_LOG_FILE='mysql-bin.000001',
+MASTER_LOG_POS=617;
+
+6. 在从库启动从库线程 
+	mysql> START SLAVE;
+
+7. 在从库检查状态
+mysql> SHOW SLAVE STATUS\G
+
+主库创建一个库，从库可以看到
+
+create database mytest2;
+
+show databases;
+
+drop database mytest2;
+
+next；
+更改从库数据库引擎，主从使用不同的
+
+-----------  重启后，不用重启从库 START SLAVE;
+
+

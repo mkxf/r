@@ -1,0 +1,76 @@
+debian9 安装mysql，安装后 soft_install 文件夹删除
+应用应该装在 /usr/local/ 下，新建自己的文件夹
+
+userid/pw
+root r
+————
+linux 下安装安装的mysql，默认区分表名大小写
+/etc/mysql/mysql.conf.d/mysqld.cnf
+在配置文件的[mysqld]后添加lower_case_table_names=1
+ 使忽略
+然后重启.
+------
+1. 使用apt 安装的是mysql 另一个分支，不使用此方式
+下载安装包进行安装
+-------------------
+下载后，放到共享文件夹，移到 /usr/local/soft_install 文件夹总
+root@debian9:/usr/soft_install# mv /media/sf_forShare/* .
+
+. 表示当前目录
+解压
+# tar -xvf mysql-server_5.7.20-1debian9_amd64.deb-bundle.tar 
+删除安装包
+# rm  mysql-server_5.7.20-1debian9_amd64.deb-bundle.tar 
+
+可能需要安装libaio 库（如果您的系统中尚未存在）：
+#apt-get install libaio1
+
+使用以下命令预配置MySQL服务器软件包： 要求输入密码
+#dpkg-preconfigure mysql-community-server_*.deb
+
+
+#dpkg -i mysql-{common,community-client,client,community-server,server}_*.deb
+
+警告未满足的依赖项 ，可以使用apt-get修复它们 
+#apt-get -f install
+
+以下是系统上安装文件的位置：
+
+所有配置文件（如 my.cnf）都在下 /etc/mysql
+
+所有二进制文件，库，标题等都在 /usr/bin和 /usr/sbin
+
+数据目录是 /var/lib/mysql
+
+---------------
+ mysql 状态
+
+# service mysql status
+启动
+# service mysql start
+停止
+# service mysql stop
+
+--------- 显示端口
+登录进mysql 后
+
+show variables like 'port';
+---------- 
+linux 下查看mysql 占用端口情况 ， 但默认是 3306，这个查的不对
+# ps -aux | grep mysql
+mysql     2967  0.0  5.3 1193340 179784 ?      Sl   14:53   0:00 /usr/sbin/mysqld --daemonize --pid-file=/var/run/mysqld/mysqld.pid
+root      3006  0.0  0.0  12988   940 pts/0    S+   15:02   0:00 grep mysql
+
+--------------
+ 安装网络工具
+ #apt-get install net-tools
+
+查看3306情况
+# netstat -apn | grep 3306
+
+查看3306占用情况 ，命令含义 -> 1/lsof命令.png
+# lsof -i:3306
+COMMAND  PID  USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+mysqld  2967 mysql   33u  IPv4  25665      0t0  TCP localhost:mysql (LISTEN)
+
+

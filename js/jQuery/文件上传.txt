@@ -1,0 +1,110 @@
+上传 
+jquery 上传组件 封装
+Upload.upload({
+
+  	url:uploadUrl, //上传地址
+	name:nameVal,
+	formData :"",        //上传传参
+	el:$('.fuckIn',$el),
+	progressall: function (e, data) { // 上传进度条
+	    var progress = parseInt(data.loaded / data.total * 100, 10);
+	    $('#progress .bar').css(
+	        'width',
+	        progress + '%'
+	    );
+	    $('.progressNum').html(progress);
+	    $('#progress').show();
+	    $('.uploadProgress').html(progress + '%');
+	},
+
+// 准备
+  add:function(e,data){
+                    var fileName = data.files[0].name;
+                    $('.uploadName').html(fileName).attr('title',fileName);
+                    var fileArray = fileName.split(".");
+                    var fileType =  fileArray.reverse()[0].toLowerCase();
+                    if(!isInternetExplorer()){
+                        var fileSize = data.files[0].size;
+                        $('.uploadSize').html(parseFloat(fileSize / 1024 / 1024).toFixed(2) + 'MB');
+                    }
+
+ 					if(!isIE8){
+                            if(fileSize>104857600){
+                                Util.dialog.tips('上传资源超过100M','failureTips');
+                                e.preventDefault();
+                            }
+                        }
+
+                        // 上传前判断，ie8 等判断不了的，直接在后头判断，转为图片流                           
+                        	var img = new Image();
+                			var $file = data.files[0];
+                			var $url;
+                			if (window.createObjectURL != undefined) {
+                				$url = window.createObjectURL($file);
+                            } else if (window.URL != undefined) {
+                            	$url = window.URL.createObjectURL($file);
+                            } else if (window.webkitURL != undefined) {
+                            	$url = window.webkitURL.createObjectURL($file);
+                            }
+                			console.log("!url ->"+!$url);
+                			var $ration = el.find("[name='imgRat']").val();
+                			console.log("$ration ->"+$ration);
+                			if(!$url){
+                				data.formData = {"ration":$ration,"limitFlag":$limitFlag};
+                				console.log(data.formData);
+                				data.submit();
+                				return;
+                			}
+                			img.src = $url;
+                			data.autoUpload = false;
+                			img.onload = function () {
+	            				var $width = img.width,$height = img.height;
+	            				console.log($width+","+$height);
+	            				
+	            				if (Math.abs( $width-$height*$ration) > 10*$ration) {
+	            					Util.dialog.tips("为保障清晰度，图片宽高比需为"+$ration+":1，请重新上传");
+	            				}else{
+	            					data.formData = {"ration":$ration,"limitFlag":$limitFlag,"imgWidth":$width,"imgHeight":$height};
+	            					data.submit();
+	            				}
+	            				 img.onload = null;
+        		        };
+
+                  }
+
+//上传后
+       done:function(e,data,el){
+
+       }
+
+       fail:function(){
+       }
+});
+
+
+ var isIE8 = isInternetExplorer();
+
+ function isInternetExplorer() {
+    var browser = navigator.appName;
+    var b_version = navigator.appVersion;
+    var version = b_version.split(";");
+    if (version.length > 1) {
+        var trim_Version = parseInt(version[1].replace(/[ ]/g, "").replace(/MSIE/g, ""));
+        if (trim_Version <= 9) {
+            return true;
+        }
+    }
+    return false;
+}
+
+
+
+-----------------java------------
+
+ 	String fileContent = getInputObject().getParams().get("filecontent");
+ // 转为流，再转成图片对象
+    BufferedImage srcImage = ImageIO.read(ConvertUtil.string2InputStream(fileContent)); // 读入文件
+		        int imgWidth = srcImage.getWidth(); // 得到源图宽
+		        int imgHeight = srcImage.getHeight(); // 得到源图长
+
+---------------
