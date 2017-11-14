@@ -1,0 +1,13 @@
+ # jdk evn
+ JAVA_HOME=/opt/jdk/jdk1.8.0_131
+ PATH=$JAVA_HOME/bin:$PATH
+ CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar        
+
+ export JAVA_HOME
+ export PATH
+ export CLASSPATH
+
+
+  # OS specific support.  $var _must_ be set to either true or false.
+ CATALINA_HOME=/opt/tomcat/tomcat8
+ JAVA_HOME=/opt/jdk/jdk1.8.0_131

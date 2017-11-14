@@ -1,0 +1,105 @@
+linux 下可以下载 Mycat-server-xxxxx.linux.tar.gz 解压在某个目录下，注意目录不能有空格
+建议放在 usr/local/Mycat 目录下
+
+MyCAT 在 Linux 中部署启动时，首先需要在 Linux 系统的环境变量中配置 MYCAT_HOME
+1) vi /etc/profile,在系统环境变量文件中增加 MYCAT_HOME=/usr/local/Mycat
+2) 执行 source /etc/profile 命令，使环境变量生效。
+
+如果是在多台 Linux 系统中组建的 MyCAT 集群，那需要在 MyCAT Server 所在的服务器上配置对其他 ip 和
+主机名的映射，配置方式如下: vi /etc/hosts
+例如:我有 4 台机器，配置如下:
+IP 主机名:
+192.168.100.2 sam_server_1
+192.168.100.3 sam_server_2
+192.168.100.4 sam_server_3
+192.168.100.5 sam_server_4
+编辑完后，保存文件。
+
+经过以上两个步骤的配置，就可以到/usr/local/Mycat/bin 目录下执行: ./mycat start
+即可启动 mycat 服务!
+
+root@debian9:/usr/local/mysoft/mycat/bin# ./mycat start
+
+ —————
+修改 schema.xml 里连接数据库的配置信息，主要是 读写节点以及连接配置，然后创建库，就可以测试mycat
+
+————
+1. 数据源连接失败，ip无法登录，检查下 
+vi /etc/mysql/mysql.conf.d/mysqld.cnf
+ 里边的绑定，是否ip限制，改成 0.0.0.0 不限制，或者使用限制的ip登录
+2. mycat的登录 用户名和密码，与mysql 无关，是在server.xml 里配置的
+3. 测试:
+	先用mysql 登录，创建3个库， db1,db2,db3  
+     mysql -utest -ptest -h127.0.0.1 -P8066 -DTESTDB
+          — 换成自己账号密码
+    登录后显示的是 mycat的版本，不是mysql
+
+    创建表： travelrecord 是默认配置文件带的表
+create table travelrecord (id bigint not null primary key,user_id varchar(100),traveldate DATE, fee decimal,days int);
+
+插入数据
+insert into travelrecord(id,user_id,traveldate,fee,days)  values(1,'Victor',20160101,100,10);
+insert into travelrecord(id,user_id,traveldate,fee,days)  values(5000001,'Job',20160102,100,10);
+insert into travelrecord(id,user_id,traveldate,fee,days)  values(10000001,'Slow',20160103,100,10);
+
+使用mysql 登录，进行查看分片情况：
+mysql> select * from db1.travelrecord;
++----+---------+------------+------+------+
+| id | user_id | traveldate | fee  | days |
++----+---------+------------+------+------+
+|  1 | Victor  | 2016-01-01 |  100 |   10 |
++----+---------+------------+------+------+
+row in set (0.00 sec)
+
+mysql> select * from db2.travelrecord;
++---------+---------+------------+------+------+
+| id      | user_id | traveldate | fee  | days |
++---------+---------+------------+------+------+
+| 5000001 | Job     | 2016-01-02 |  100 |   10 |
++---------+---------+------------+------+------+
+row in set (0.00 sec)
+
+mysql> select * from db3.travelrecord;
++----------+---------+------------+------+------+
+| id       | user_id | traveldate | fee  | days |
++----------+---------+------------+------+------+
+| 10000001 | Slow    | 2016-01-03 |  100 |   10 |
++----------+---------+------------+------+------+
+row in set (0.00 sec)
+
+ ——  
+mycat 下，语句前边带 explain ，可以查看是在哪个库（Datanode）执行的
+
+server.xml是Mycat服务器参数调整和用户授权的配置文件
+
+schema.xml是逻辑库定义和表以及分片定义的配置文件
+
+rule.xml是分片规则的配置文件
+————————————————
+只读从库数据
+1. 修改从库可以远程访问
+—- 可使用别的账号
+ GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'r' WITH GRANT OPTION;
+flush privileges;
+
+2. 此账号在mycat的配置文件中配置 读节点信息
+	可先在主库所在连接下从库
+3.节点 dataHost 中配置 balance="3" ， 会只从 writeHost 对应的 readHost 中读
+
+—————
+<dataHost name="localhost" maxCon="1000" minCon="10" balance="3"
+	writeType="0" dbType="mysql" dbDriver="native" switchType="1"  slaveThreshold="100">
+
+<writeHost host="hostM1" url="127.0.0.1:3306" user="root"   password="r">
+	<readHost host="hostS2" url="mk_server_21:3306" user="root" password="r" />
+</writeHost>
+</dataHost>
+
+—————
+
+ balance 属性负载均衡类型，目前的取值有 3 种:1. balance="0", 不开启读写分离机制，所有读操作都发送到当前可用的 writeHost 上。2. balance="1"，全部的 readHost 与 stand by writeHost 参与 select 语句的负载均衡，简单的说，当双主双从模式(M1->S1，M2->S2，并且 M1 与 M2 互为主备)，正常情况下，M2,S1,S2 都参与 select 语句的负载 均衡。3. balance="2"，所有读操作都随机的在 writeHost、readhost 上分发。4. balance="3"，所有读请求随机的分发到 wiriterHost 对应的 readhost 执行，writerHost 不负担读压 力，注意 balance=3 只在 1.4 及其以后版本有，1.3 没有
+
+
+writeType 属性负载均衡类型，目前的取值有 3 种:1. writeType="0", 所有写操作发送到配置的第一个 writeHost，第一个挂了切到还生存的第二个 writeHost，重新启动后已切换后的为准，切换记录在配置文件中:dnindex.properties .2. writeType="1"，所有写操作都随机的发送到配置的 writeHost，1.5 以后废弃不推荐。
+
+switchType 属 性-1(负一) 表示不自动切换1 默认值，自动切换2 基于 MySQL 主从同步的状态决定是否切换

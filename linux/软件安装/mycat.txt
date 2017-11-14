@@ -1,0 +1,30 @@
+mycat 环境设置
+1. 解压到 /usr/local/mysoft 下
+tar -xvf ...
+2. 配置环境变量
+# vi /etc/profile
+ 增加 
+
+ MYCAT_HOME=/usr/local/mysoft/mycat/
+
+使生效
+# source /etc/profile
+
+3. 更改主机名映射
+vi /etc/hosts
+
+增加 
+192.168.56.20   mk_server_20
+192.168.56.21	mk_server_21
+原来上边有 
+127.0.0.1	localhost
+127.0.1.1	debian9
+ 不用管
+
+ ---------
+ 启动mycat ，去安装目录下，执行 ./mycat start ， 关闭 stop
+
+ root@debian9:/usr/local/mysoft/mycat/bin# ./mycat start
+Starting Mycat-server...
+root@debian9:/usr/local/mysoft/mycat/bin# 
+
