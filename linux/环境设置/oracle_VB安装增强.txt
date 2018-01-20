@@ -12,3 +12,13 @@
 
 ----
 重启后，挂载再弹出，桌面就没光盘图标了
+
+—————— 安装失败：
+
+
+# 打开一个root终端：
+apt-get install build-essential
+apt-get install linux-headers-$(uname -r)
+sh /media/cdrom0/VBoxLinuxAdditions.run
+
+
