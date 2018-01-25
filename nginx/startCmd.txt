@@ -1,7 +1,0 @@
-mukaideMacBook-Pro:Users mk$ brew services start nginx
-==> Successfully started `nginx` (label: homebrew.mxcl.nginx)
-mukaideMacBook-Pro:Users mk$ brew services stop nginx
-Stopping `nginx`... (might take a while)
-==> Successfully stopped `nginx` (label: homebrew.mxcl.nginx)
-mukaideMacBook-Pro:Users mk$ which nginx
-/usr/local/bin/nginx

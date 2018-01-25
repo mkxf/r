@@ -139,85 +139,8 @@ vi /etc/resolv.conf
 2 添加DNS
 nameserver XX.XX.XX.XX
 
-————————
-mac 设置 —————
-<<<<<<< HEAD
 
-https://askubuntu.com/questions/293816/in-virtualbox-how-do-i-set-up-host-only-virtual-machines-that-can-access-the-in
-
-1. 没有host-only界面，进入虚拟机后，在偏好设置里，打开网络，点击  host-only ，添加一个，编辑，设置一下ip，保存，退出
-2. 虚拟机设置：
-	1.默认NAT，虚拟机可以访问外网，使用的是主机网卡
-	2. 使用host-only ，主机可以访问虚拟机，可以设置静态ip
-
-
-Run this to see your adapters:
-
-ls /sys/class/net
-
-edit /etc/network/interfaces
-
-—————— add this：
-
-
-# Host-only interface
-auto enp0s8
-iface enp0s8 inet static
-        address         192.168.56.20
-        netmask         255.255.255.0
-        network         192.168.56.0
-        broadcast       192.168.56.255
-
-# NAT interface
-auto enp0s3
-iface enp0s3 inet dhcp
-
-——————— end。
-restart
-
-ifdown enp0s3 && ifup enp0s3
-ifdown enp0s8 && ifup enp0s8
-=======
-
-<<<<<<< HEAD
 nameserver 211.138.24.66
 nameserver 211.138.30.66
 
 
-=======
-https://askubuntu.com/questions/293816/in-virtualbox-how-do-i-set-up-host-only-virtual-machines-that-can-access-the-in
-
-1. 没有host-only界面，进入虚拟机后，在偏好设置里，打开网络，点击  host-only ，添加一个，编辑，设置一下ip，保存，退出
-2. 虚拟机设置：
-	1.默认NAT，虚拟机可以访问外网，使用的是主机网卡
-	2. 使用host-only ，主机可以访问虚拟机，可以设置静态ip
-
-
-Run this to see your adapters:
-
-ls /sys/class/net
-
-edit /etc/network/interfaces
-
-—————— add this：
-
-
-# Host-only interface
-auto enp0s8
-iface enp0s8 inet static
-        address         192.168.56.20
-        netmask         255.255.255.0
-        network         192.168.56.0
-        broadcast       192.168.56.255
-
-# NAT interface
-auto enp0s3
-iface enp0s3 inet dhcp
-
-——————— end。
-restart
-
-ifdown enp0s3 && ifup enp0s3
-ifdown enp0s8 && ifup enp0s8
->>>>>>> 2cab73e12c03dc00d5061bf34bb8db41c663cabe
->>>>>>> 01ea00dd78a01f9e51262fa4038ad28c49c9fd96

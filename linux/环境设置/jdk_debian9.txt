@@ -1,0 +1,45 @@
+
+1.下载linux 64位，不是86（32）
+http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html?printOnly=1
+2.解压到 /usr/jdk
+tar -zxvf jdk-8u161-linux-x64.tar.gz
+3. 删除压缩包
+rm jdk-8u161-linux-x64.tar.gz
+4.设置环境变量
+vi /etc/profile
+注释掉以前的 export PATH
+改为下边
+
+------
+# export PATH
+
+JAVA_HOME=/usr/jdk/jdk1.8.0_161
+PATH=$JAVA_HOME/bin:$PATH
+
+export JAVA_HOME
+export PATH
+--------
+
+5. 设置生效
+source /etc/profile
+
+---
+jdk 版本不对，会提示路径无效
+
+6. java -version
+ whereis java
+ java -verbose
+
+7. 再打开新的shell，会出现，还是系统自带的jdk
+更改优先级，（系统自带默认是1081，安装的设置为1100）
+
+update-alternatives --install /usr/bin/java java /usr/jdk/jdk1.8.0_161/bin/java 1100
+update-alternatives --install /usr/bin/javac javac /usr/jdk/jdk1.8.0_161/bin/javac 1100
+
+更改后验证
+update-alternatives --config java 
+update-alternatives --config javac
+
+----
+  一般2个手动（系统自带一个，安装一个），一个自动(自动就是优先级高的)
+

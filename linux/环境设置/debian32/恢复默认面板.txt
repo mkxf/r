@@ -1,0 +1,16 @@
+Trouble:
+
+
+	有的时候 xfce 面板上元素的位置不小心被弄乱了
+	特别是 系统的通知区域 ，这个元素的位置搞乱了就调整不回来了
+	(通知栏跑到左边来了，无法恢复到右边去)
+
+Oneway:
+
+
+	打开一个Terminal终端环境,执行以下命令
+
+	rm ~/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml
+
+	注销桌面，重新登录桌面，会提示重新配置面板，
+	先选择 Use default config ,然后重新配置一下就好了

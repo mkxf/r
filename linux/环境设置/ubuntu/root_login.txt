@@ -1,0 +1,11 @@
+1. 
+sudo gedit /usr/share/lightdm/lightdm.conf.d/50-ubuntu.conf
+
+2. add:
+greeter-show-manual-login=true
+allow-guest=false
+3.
+sudo passwd root
+
+restart.
+ -- relogin no effect

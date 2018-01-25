@@ -1,0 +1,99 @@
+
+直接设置 里配置就行，命令里配置也是这效果
+ -----------------------------------------
+直接在系统设置   网络里进行配置
+
+192.168.56.13
+
+24
+
+192.168.56.1
+
+dns
+
+211.138.24.66
+211.138.30.66
+
+ -----------------------------------------  没有dns配置
+对于命令设置，会更改外部配置，ip改成配置文件里的
+root 用户登录终端
+1 先执行 
+ifconfig
+看下网卡都什么名称，复制下来 ,如 enp0s3 、 enp0s8
+2  #gedit /etc/network/interfaces 
+ 修改成下边
+ --------------
+# interfaces(5) file used by ifup(8) and ifdown(8)
+   auto lo   
+   iface lo inet loopback   
+
+# NAT interface
+auto enp0s3
+iface enp0s3 inet dhcp
+
+# Host-only interface
+#IP should be same with the ip of Virtualbox host-only interface
+auto enp0s8
+iface enp0s8 inet static
+address 192.168.56.21
+netmask 255.255.255.0
+network 192.168.56.0
+broadcast 192.168.56.255
+-------------------------------
+
+3. 可以考虑加下 
+
+GRUB_CMDLINE_LINUX_DEFAULT="net.ifnames=0" 
+
+ --  禁用了“可预测的网络接口名称”选项进入grub配置
+
+4.  ifdown --exclude=lo -a &&  ifup --exclude=lo -a
+
+5. 重启
+	 reboot
+ 不重启没见起作用
+
+ 6. 重启后
+   ifconfig 
+   发现生效，并且外部能ping 通
+
+
+另：
+	service networking restart 
+	--  此命令无效，新的已不再使用
+
+	Debian：运行/etc/init.d/networking restart已被弃用，因为它可能无法再次启用某些接口 
+
+ 使用会报错：
+	Job for networking.service failed because the control process exited with error code.
+	See "systemctl status networking.service" and "journalctl -xe" for details.
+
+
+   ------------------------
+
+
+# Host-only interface
+auto eth0
+iface eth0 inet static
+address 192.168.56.105
+netmask 255.255.255.0
+network 192.168.56.0
+broadcast 192.168.56.255
+
+# NAT interface
+auto eth1
+iface eth1 inet dhcp
+
+# Bridged interface
+auto eth2
+iface eth2 inet static
+address 192.168.0.105
+netmask 255.255.255.0
+gateway 192.168.0.255
+dns-nameservers 8.8.8.8
+
+
+https://askubuntu.com/questions/768955/failed-to-bring-up-eth2-ubuntu-16-04
+
+nameserver 211.138.24.66
+nameserver 211.138.30.66
