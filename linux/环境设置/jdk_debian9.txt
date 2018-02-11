@@ -5,23 +5,21 @@ http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.h
 tar -zxvf jdk-8u161-linux-x64.tar.gz
 3. 删除压缩包
 rm jdk-8u161-linux-x64.tar.gz
-4.设置环境变量
-vi /etc/profile
-注释掉以前的 export PATH
-改为下边
+4.设置环境变量  (from   ~/.profile  )
+vi ~/.bashrc
+
 
 ------
-# export PATH
 
-JAVA_HOME=/usr/jdk/jdk1.8.0_161
-PATH=$JAVA_HOME/bin:$PATH
 
-export JAVA_HOME
-export PATH
+export  JAVA_HOME=/usr/jdk/jdk1.8.0_161
+export  PATH=$JAVA_HOME/bin:$PATH
+
+
 --------
 
 5. 设置生效
-source /etc/profile
+source ~/.bashrc
 
 ---
 jdk 版本不对，会提示路径无效
