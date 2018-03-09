@@ -1,0 +1,15 @@
+
+$CATALINA_HOME/bin/startup.sh
+
+    or
+
+$CATALINA_HOME/bin/catalina.sh start
+
+
+$CATALINA_HOME/bin/shutdown.sh
+
+    or
+
+$CATALINA_HOME/bin/catalina.sh stop
+
+      Axis2Service

@@ -1,0 +1,27 @@
+字符串替换
+
+1.都是全部替换，除了带 first
+
+2.分为 字符， 字符串（其实是 charSequence），
+
+3.带all的是 正则替换
+
+===============
+
+String  s ="aaa";
+s.replace('a','b'); // bbb
+
+s.replace("a","b"); //bbb
+
+s.replaceAll(正则字符串,结果) 
+
+		An invocation of this method of the form str.replaceAll(regex, repl) yields exactly the same result as the expression
+
+		java.util.regex.Pattern.compile(regex).matcher(str).replaceAll(repl)
+
+s.replaceFirst("","")
+
+An invocation of this method of the form str.replaceAll(regex, repl) yields exactly the same result as the expression
+
+java.util.regex.Pattern.compile(regex).matcher(str).replaceAll(repl)
+

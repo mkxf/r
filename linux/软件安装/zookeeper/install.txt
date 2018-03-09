@@ -1,0 +1,30 @@
+cd /usr/local/mysoft/
+
+wget http://mirror.bit.edu.cn/apache/zookeeper/zookeeper-3.3.6/zookeeper-3.3.6.tar.gz
+
+tar zxvf zookeeper-3.3.6.tar.gz
+cd zookeeper-3.3.6
+cp conf/zoo_sample.cfg conf/zoo.cfg
+
+vi conf/zoo.cfg
+
+修改：
+dataDir=/home/dubbo/zookeeper-3.3.6/data
+
+
+===== 集群才用
+增加：
+server.1=192.168.56.20:2888:3888
+server.2=192.168.56.21:2888:3888
+
+并在 data 目录 4 下放置 myid 文件
+myid 指明自己的 id，对应上面 zoo.cfg 中 server. 后的数字
+第一台的内容为 1，第二台的内容为 2
+=============
+启动 
+./zkServer.sh start
+stop
+./zkServer.sh status
+
+
+ZooKeeper 的客户端程序会选择和集群中的任意一台服务器创建一个 TCP 连接，而且一旦客户端和服务器断开连接，客户端就会自动连接到集群中的其他服务器

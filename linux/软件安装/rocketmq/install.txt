@@ -1,0 +1,52 @@
+https://rocketmq.apache.org/docs/quick-start/
+1. 下载源码
+https://www.apache.org/dyn/closer.cgi?path=rocketmq/4.2.0/rocketmq-all-4.2.0-source-release.zip
+2. 解压并构建成二进制组件
+  > unzip rocketmq-all-4.2.0-source-release.zip
+  > cd rocketmq-all-4.2.0/
+  构建
+  > mvn -Prelease-all -DskipTests clean install -U
+  时间有点长
+  进入目录
+  > cd distribution/target/apache-rocketmq
+  
+
+ 3. 先启动 Name Server
+
+  > nohup sh bin/mqnamesrv &
+
+  可以 control + c ，接着下一条命令
+  如果出错，是没有此日志 
+
+  > tail -f ~/logs/rocketmqlogs/namesrv.log
+  The Name Server boot success...
+
+4. 启动 Broker
+ 如果启动失败，修改 runbroker.sh 文件 关于内存的配置，可能是内存不够
+ 改成这个大小 ，虚拟机分配3g内存，文件默认 8.8.4g
+ JAVA_OPT="-server -Xms2g -Xmx2g -Xmn1g -XX:PermSize=128m -XX:MaxPermSize=320m"
+
+  > nohup sh bin/mqbroker -n localhost:9876 &
+  > tail -f ~/logs/rocketmqlogs/broker.log 
+  The broker[%s, 172.30.30.233:10911] boot success...
+
+  5 发送接收消息
+
+ > export NAMESRV_ADDR=localhost:9876
+
+ > sh bin/tools.sh org.apache.rocketmq.example.quickstart.Producer
+ SendResult [sendStatus=SEND_OK, msgId= ...
+
+ > sh bin/tools.sh org.apache.rocketmq.example.quickstart.Consumer
+ ConsumeMessageThread_%d Receive New Messages: [MessageExt...
+
+6.关闭服务， 先 broker 再 namesrv
+
+> sh bin/mqshutdown broker
+The mqbroker(36695) is running...
+Send shutdown request to mqbroker(36695) OK
+
+> sh bin/mqshutdown namesrv
+The mqnamesrv(36664) is running...
+Send shutdown request to mqnamesrv(36664) OK
+

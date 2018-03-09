@@ -1,0 +1,30 @@
+
+from   ~/.profile  
+-->
+
+通过  vi /etc/profile 配置 JAVA_HOME ，source 后，在新shell 中不生效
+查看 ~/.profile 文件，启用的是 ~/.bashrc， 故改为在 ~/.bashrc 中配置。
+
+1. vi ~/.profile
+
+----
+
+if [ "$BASH" ]; then
+  if [ -f ~/.bashrc ]; then
+    . ~/.bashrc
+  fi
+fi
+
+mesg n || true
+
+-----
+
+2. vi ~/.bashrc
+
+
+export JAVA_HOME=/usr/jdk/jdk1.8.0_161
+export MYCAT_HOME=/usr/local/mysoft/mycat
+
+export PATH=$JAVA_HOME/bin:$PATH
+
+3. source ~/.bashrc
