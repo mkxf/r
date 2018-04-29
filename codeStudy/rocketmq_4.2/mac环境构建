@@ -1,0 +1,163 @@
+
+---------- 1. 下载 2. 修改 ---------------
+		 1 改 pom （netty） 
+		 2. 环境变量 改为具体值 （项目/distribution)
+		 3. BrokerConfig 改 namesrvAddr   
+		 4. producer/consumer 指定 namesrvAddr
+————————————————————————————————————————
+==========================下载 搭建===============
+1 find code 
+https://github.com/apache/rocketmq
+
+2 eclipse  git 下载到本地
+  子项目 按 meven 导入到 顶级项目中
+
+3 启动 namesrv  和 broker 
+	org.apache.rocketmq.namesrv  NamesrvStartup
+	org.apache.rocketmq.broker  BrokerStartup
+
+4.使用自带的类测试
+	org.apache.rocketmq.example.quickstart
+	producer  Consumer
+ 
+ 环境搭建结束。
+ 日志在 /Users/mk/logs/rocketmqlogs
+
+
+================= 修改点： =======================
+
+ 1. 在.xml 里搜索 netty-tcnative ，修改此jar包 引用方式
+    删除 <classifier> 这一行，跨环境使用的，用不上也不对，仓库没有
+
+ 2. 环境变量 rocketmqHome 在类中改为具体值 
+	 NamesrvConfig 和 BrokerConfig 
+
+  rocketmqHome="/Users/mk/work/workspaceMy/rocketmq/distribution";
+   （到子项目 distribution 这一级。）
+ 
+ 3. BrokerConfig 中修改 namesrvAddr = "127.0.0.1:9876";
+    不从配置中获取，源码环境 获取不到。
+
+    如果没改，测试生产端时 会提示  路由失败
+
+    成功 broker 的日志中会 （/Users/mk/logs/rocketmqlogs里）
+    一 打印 namesrvAddr  
+    二 提示 register broker to name server 127.0.0.1:9876 OK
+    没值 或 不显示 就是错的。
+
+ 4. producer  Consumer 增加 namesrvAddr 的 set ，在 start 之前
+   	  producer.setNamesrvAddr("127.0.0.1:9876");
+      consumer.setNamesrvAddr("127.0.0.1:9876");
+
+
+============= 修改点结束 end ===========================
+
+另，是否启动成功，可以看点端口是否被占用
+			
+			mac查看某个端口是否被占用
+	        $ lsof -i:3000
+===============================================================================
+mac  环境变量设置 
+
+		此值不一定对,可能是 /Users/mk/work/workspaceMy/rocketmq/distribution
+
+
+		vi ~/.bash_profile 
+
+		----------------
+		export ROCKETMQ_HOME=/Users/mk/work/workspaceMy/rocketmq
+
+		export PATH=${ROCKETMQ_HOME}:$PATH
+		-------------
+		esc  :wq
+		然后 
+		source ~/.bash_profile 
+
+		=================
+
+				/etc/profile   /etc/bashrc  系统级别的 所有用户均可使用
+				~/.bash_profile  当前用户
+
+		---------------------
+				export JAVA_HOME=$(/usr/libexec/java_home)
+				  
+				export CATALINA_HOME=/Users/mk/work/tools/tomcat/apache-tomcat-8.5.28
+
+				export M2_HOME=/Users/mk/work/tools/maven/apache-maven-3.5.0
+
+				export M2=$M2_HOME/bin
+
+				export PATH=$M2:$PATH
+
+				export PATH=${PATH}:/usr/local/mysql/bin
+
+				export ROCKETMQ_HOME=/Users/mk/work/workspaceMy/rocketmq
+
+				export PATH=${ROCKETMQ_HOME}:$PATH
+		--------------------
+
+
+
+===================================
+详综：
+
+1.find code 
+from 
+搜索 rocketmq，进入 github
+https://github.com/apache/rocketmq
+fork 到自己库，通过此链接  用 eclipse 下载
+https://github.com/mkxf/rocketmq.git
+
+2. git 下载成一般项目到 workspace 中
+  a.把整个项目 按 maven 导入到顶级项目，报错不管。
+  b.修改 netty 的一个问题：
+  
+    点击其中一个子项目，看 build path 的 lib时 发现
+    netty-tcnative jar 找不到，在pom搜索此jar
+    依赖中 有 
+    <classifier>${os.detected.classifier}</classifier>
+    是根据环境获取相应的值，共同组成一个jar完整名，多平台时使用，
+    但此包在maven仓库就一个，删除此行，更新jar包。
+  
+  环境修改点结束
+   注：有些子项目是按1.6编译的，整体要求是1.7，不用管
+
+3. 根据项目介绍 和 架构
+   先启动 namesrv  和 broker  再启动 producer 和 consumer
+
+   a 环境变量没配置，直接修改相关类 
+   	 A. NamesrvConfig 的 rocketmqHome="/Users/mk/work/workspaceMy/rocketmq/distribution";
+   	 是 顶级项目  再到 distribution 子项目这一级
+   	 （配置也可以，但需要需要重启eclipse才有效（修改后eclipse所在的shell 感知不到新的））
+   	 B. BrokerConfig 的 rocketmqHome = "/Users/mk/work/workspaceMy/rocketmq/distribution";
+       和  namesrvAddr = "127.0.0.1:9876";
+
+       如果没改 rocketmqHome ，没报 找不到namersrv
+       没改  namesrvAddr， 则会报  topic 找不到路由，确定方法
+       1.namersrv 和  broker 是否启动对
+	       mac查看某个端口是否被占用
+	        $ lsof -i:3000
+       	broker 启动后，日志 （/Users/mk/logs/rocketmqlogs里）
+       	一 打印 namesrvAddr  
+       	二 提示 register broker to name server 127.0.0.1:9876 OK
+       	看这2个值是否正确
+       2. 是否可以自动创建 topic 
+       BrokerConfig 的  autoCreateTopicEnable 是否为 true。
+       3. topic 的 优先级 是否6 ，最小是2
+	   4. 防火墙是否关闭，或者把 9876 和 10911（netty的） 端口 放开。
+
+     启动 namesrv 类
+     org.apache.rocketmq.namesrv  NamesrvStartup
+
+     启动 broker
+     org.apache.rocketmq.broker  BrokerStartup
+
+     测试：
+     使用 org.apache.rocketmq.example.quickstart 里 自带的类
+     Producer 生产
+     Consumer 消费
+      都需要添加 namersrv 地址
+      producer.setNamesrvAddr("127.0.0.1:9876");
+      consumer.setNamesrvAddr("127.0.0.1:9876");
+      加到 start  之前。
+ ========================================== 环境 结束。
