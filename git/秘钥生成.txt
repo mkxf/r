@@ -45,6 +45,10 @@ $ ssh-keygen -t rsa -C "mkxf@163.com"
 	编辑后 按esc 然后冒号 ，输入wq 保存退出
 
 id_rsa.pub  的内容，放在github的sshkey里边 ，设置里边
+--------------------------------------------
+后边的操作，会让再输入次密码
+
+------------------------
 
 $ git add *  
 $ git commit -m 'first commit'
