@@ -17,7 +17,11 @@ user.email=mkxf@163.com
 user.name=穆凯
 alias.cm=commit -m
 
-
+----------------
+win10 修改
+ $ git config --global user.email mkxf@163.com
+ git config --global user.name "穆凯"
+ git config --global alias.cm ommit -m
 -----------------------
 $ ssh-keygen -t rsa -C "mkxf@163.com"
  
