@@ -21,7 +21,11 @@ alias.cm=commit -m
 win10 修改
  $ git config --global user.email mkxf@163.com
  git config --global user.name "穆凯"
- git config --global alias.cm ommit -m
+ git config --global alias.cm "ommit -m"
+-----
+一个键多个值时，替换，变成一个
+git config --global --replace-all user.email "new@mail.com"
+
 -----------------------
 $ ssh-keygen -t rsa -C "mkxf@163.com"
  
