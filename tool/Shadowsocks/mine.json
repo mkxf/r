@@ -1,0 +1,8 @@
+{
+    "server":["jp07.cnode.xyz"],
+    "server_port":21488,
+    "local_port":1080,
+    "password":"4rk5xhrg5u",
+    "timeout":300,
+    "method":"aes-256-cfb"
+}
